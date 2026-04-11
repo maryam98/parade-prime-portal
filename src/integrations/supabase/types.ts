@@ -83,6 +83,39 @@ export type Database = {
         }
         Relationships: []
       }
+      faqs: {
+        Row: {
+          answer: string
+          created_at: string
+          id: string
+          language: string
+          question: string
+          sort_order: number
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          answer: string
+          created_at?: string
+          id?: string
+          language?: string
+          question: string
+          sort_order?: number
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          answer?: string
+          created_at?: string
+          id?: string
+          language?: string
+          question?: string
+          sort_order?: number
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       hero_slides: {
         Row: {
           created_at: string

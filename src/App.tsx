@@ -29,6 +29,7 @@ import AdminReservations from "./pages/admin/AdminReservations";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminSettings from "./pages/admin/AdminSettings";
 import FAQ from "./pages/FAQ";
+import AdminFAQ from "./pages/admin/AdminFAQ";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -66,6 +67,7 @@ const App = () => (
             <Route path="/admin/messages" element={<ProtectedRoute requireAdmin><AdminMessages /></ProtectedRoute>} />
             <Route path="/admin/reservations" element={<ProtectedRoute requireAdmin><AdminReservations /></ProtectedRoute>} />
             <Route path="/admin/users" element={<ProtectedRoute requireAdmin><AdminUsers /></ProtectedRoute>} />
+            <Route path="/admin/faq" element={<ProtectedRoute requireAdmin><AdminFAQ /></ProtectedRoute>} />
             <Route path="/admin/settings" element={<ProtectedRoute requireAdmin><AdminSettings /></ProtectedRoute>} />
 
             <Route path="*" element={<NotFound />} />
