@@ -4,10 +4,12 @@ import { Mail, Phone, MapPin } from 'lucide-react';
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/components/ui/sonner';
+import { useSiteSettings } from '@/hooks/useSiteSettings';
 
 const Contact = () => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.language === 'fa';
+  const settings = useSiteSettings();
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
 
@@ -94,9 +96,9 @@ const Contact = () => {
               className="space-y-8"
             >
               {[
-                { icon: Mail, label: 'info@paradaim.com' },
-                { icon: Phone, label: '+49 123 456 789' },
-                { icon: MapPin, label: t('contact.addressText') },
+                { icon: Mail, label: settings.contact_email || 'info@paradaim.com' },
+                { icon: Phone, label: settings.contact_phone || '+49 123 456 789' },
+                { icon: MapPin, label: settings.address || t('contact.addressText') },
               ].map((item, i) => (
                 <div key={i} className="flex items-start gap-4">
                   <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
