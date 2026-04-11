@@ -5,6 +5,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useState } from 'react';
 import { toast } from '@/components/ui/sonner';
+import ImageUpload from '@/components/ImageUpload';
 
 interface ArticleForm {
   title: string;
@@ -92,8 +93,7 @@ const AdminArticles = () => {
           <option value="Published">Published</option>
         </select>
       </div>
-      <input placeholder="Image URL" value={form.image_url} onChange={e => setForm(f => ({ ...f, image_url: e.target.value }))}
-        className="w-full px-3 py-2 rounded-lg border border-input bg-background text-foreground text-sm" />
+      <ImageUpload value={form.image_url} onChange={url => setForm(f => ({ ...f, image_url: url }))} folder="articles" />
       <div className="flex gap-2">
         <button onClick={() => save.mutate()} className="flex items-center gap-1 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium"><Save className="h-3.5 w-3.5" /> Save</button>
         <button onClick={cancel} className="flex items-center gap-1 px-4 py-2 border border-border rounded-lg text-sm text-muted-foreground"><X className="h-3.5 w-3.5" /> Cancel</button>
