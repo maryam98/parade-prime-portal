@@ -3,6 +3,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { AuthProvider } from "./contexts/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
 import Layout from "./components/Layout";
 import Index from "./pages/Index";
 import About from "./pages/About";
@@ -12,6 +14,7 @@ import Reservation from "./pages/Reservation";
 import Blog from "./pages/Blog";
 import Products from "./pages/Products";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminServices from "./pages/admin/AdminServices";
 import AdminArticles from "./pages/admin/AdminArticles";
@@ -31,30 +34,33 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          {/* Public pages with layout */}
-          <Route path="/" element={<Layout><Index /></Layout>} />
-          <Route path="/about" element={<Layout><About /></Layout>} />
-          <Route path="/services" element={<Layout><Services /></Layout>} />
-          <Route path="/contact" element={<Layout><Contact /></Layout>} />
-          <Route path="/reservation" element={<Layout><Reservation /></Layout>} />
-          <Route path="/blog" element={<Layout><Blog /></Layout>} />
-          <Route path="/products" element={<Layout><Products /></Layout>} />
-          <Route path="/login" element={<Layout><Login /></Layout>} />
+        <AuthProvider>
+          <Routes>
+            {/* Public pages */}
+            <Route path="/" element={<Layout><Index /></Layout>} />
+            <Route path="/about" element={<Layout><About /></Layout>} />
+            <Route path="/services" element={<Layout><Services /></Layout>} />
+            <Route path="/contact" element={<Layout><Contact /></Layout>} />
+            <Route path="/reservation" element={<Layout><Reservation /></Layout>} />
+            <Route path="/blog" element={<Layout><Blog /></Layout>} />
+            <Route path="/products" element={<Layout><Products /></Layout>} />
+            <Route path="/login" element={<Layout><Login /></Layout>} />
+            <Route path="/register" element={<Layout><Register /></Layout>} />
 
-          {/* Admin pages (own layout) */}
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/admin/services" element={<AdminServices />} />
-          <Route path="/admin/articles" element={<AdminArticles />} />
-          <Route path="/admin/products" element={<AdminProducts />} />
-          <Route path="/admin/slider" element={<AdminSlider />} />
-          <Route path="/admin/messages" element={<AdminMessages />} />
-          <Route path="/admin/reservations" element={<AdminReservations />} />
-          <Route path="/admin/users" element={<AdminUsers />} />
-          <Route path="/admin/settings" element={<AdminSettings />} />
+            {/* Admin pages - protected */}
+            <Route path="/admin" element={<ProtectedRoute requireAdmin><AdminDashboard /></ProtectedRoute>} />
+            <Route path="/admin/services" element={<ProtectedRoute requireAdmin><AdminServices /></ProtectedRoute>} />
+            <Route path="/admin/articles" element={<ProtectedRoute requireAdmin><AdminArticles /></ProtectedRoute>} />
+            <Route path="/admin/products" element={<ProtectedRoute requireAdmin><AdminProducts /></ProtectedRoute>} />
+            <Route path="/admin/slider" element={<ProtectedRoute requireAdmin><AdminSlider /></ProtectedRoute>} />
+            <Route path="/admin/messages" element={<ProtectedRoute requireAdmin><AdminMessages /></ProtectedRoute>} />
+            <Route path="/admin/reservations" element={<ProtectedRoute requireAdmin><AdminReservations /></ProtectedRoute>} />
+            <Route path="/admin/users" element={<ProtectedRoute requireAdmin><AdminUsers /></ProtectedRoute>} />
+            <Route path="/admin/settings" element={<ProtectedRoute requireAdmin><AdminSettings /></ProtectedRoute>} />
 
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
