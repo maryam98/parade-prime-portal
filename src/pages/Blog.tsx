@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { Link } from 'react-router-dom';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -44,9 +45,10 @@ const Blog = () => {
         <div className="container mx-auto px-4">
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {articles.map((article, i) => (
-              <motion.article key={article.id} initial="hidden" whileInView="visible" viewport={{ once: true }}
+              <Link to={`/blog/${article.id}`} key={article.id}>
+              <motion.article initial="hidden" whileInView="visible" viewport={{ once: true }}
                 variants={fadeUp} custom={i}
-                className="group p-6 rounded-xl border border-border bg-card hover:border-primary/30 hover:shadow-lg transition-all duration-300 cursor-pointer">
+                className="group p-6 rounded-xl border border-border bg-card hover:border-primary/30 hover:shadow-lg transition-all duration-300 cursor-pointer h-full">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary font-medium">{article.category}</span>
                   <span className="text-xs text-muted-foreground">{article.published_at}</span>
@@ -57,6 +59,7 @@ const Blog = () => {
                 <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{article.excerpt}</p>
                 <span className="mt-4 inline-block text-sm text-primary font-medium">{t('blog.readMore')} →</span>
               </motion.article>
+              </Link>
             ))}
           </div>
         </div>
