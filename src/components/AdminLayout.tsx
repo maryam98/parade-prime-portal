@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, Settings as SettingsIcon, FileText, Package, Image, MessageSquare, CalendarDays, Users,
-  Layers, Menu, X
+  Layers, Menu, X, HelpCircle
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -21,6 +21,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
     { path: '/admin/messages', label: t('admin.messages'), icon: MessageSquare },
     { path: '/admin/reservations', label: t('admin.reservations'), icon: CalendarDays },
     { path: '/admin/users', label: t('admin.users'), icon: Users },
+    { path: '/admin/faq', label: 'FAQ', icon: HelpCircle },
     { path: '/admin/settings', label: t('admin.settings'), icon: SettingsIcon },
   ];
 
