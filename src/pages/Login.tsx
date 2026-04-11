@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
+import { lovable } from '@/integrations/lovable';
 
 const Login = () => {
   const { t, i18n } = useTranslation();
@@ -34,9 +35,8 @@ const Login = () => {
   };
 
   const handleGoogleLogin = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: window.location.origin },
+    await lovable.auth.signInWithOAuth('google', {
+      redirect_uri: window.location.origin,
     });
   };
 
