@@ -1,8 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, Search, X } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useState, useMemo } from 'react';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -12,6 +13,7 @@ const fadeUp = {
 const Products = () => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.language === 'fa';
+  const [search, setSearch] = useState('');
 
   const { data: products = [] } = useQuery({
     queryKey: ['products'],
@@ -26,6 +28,21 @@ const Products = () => {
     },
   });
 
+  const filtered = useMemo(() => {
+    if (!search.trim()) return products;
+    const q = search.toLowerCase();
+    return products.filter(p =>
+      p.name.toLowerCase().includes(q) ||
+      (p.description && p.description.toLowerCase().includes(q)) ||
+      (p.price && p.price.toLowerCase().includes(q))
+    );
+  }, [products, search]);
+
+  const labels = {
+    search: isRtl ? 'جستجوی محصولات...' : i18n.language === 'de' ? 'Produkte suchen...' : 'Search products...',
+    noResults: isRtl ? 'محصولی یافت نشد' : i18n.language === 'de' ? 'Keine Produkte gefunden' : 'No products found',
+  };
+
   return (
     <div dir={isRtl ? 'rtl' : 'ltr'}>
       <section className="py-20 hero-gradient">
@@ -38,27 +55,48 @@ const Products = () => {
             className="mt-4 text-surface-dark-foreground/60">
             {t('products.subtitle')}
           </motion.p>
+
+          {/* Search bar */}
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+            className="mt-8 max-w-lg mx-auto relative">
+            <Search className="absolute top-3.5 left-4 h-5 w-5 text-muted-foreground pointer-events-none" />
+            <input type="text" value={search} onChange={e => setSearch(e.target.value)}
+              placeholder={labels.search}
+              className="w-full pl-12 pr-10 py-3 rounded-xl border border-border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring shadow-lg" />
+            {search && (
+              <button onClick={() => setSearch('')} className="absolute top-3.5 right-4 text-muted-foreground hover:text-foreground">
+                <X className="h-5 w-5" />
+              </button>
+            )}
+          </motion.div>
         </div>
       </section>
 
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4">
-          <div className="grid sm:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {products.map((product, i) => (
-              <motion.div key={product.id} initial="hidden" whileInView="visible" viewport={{ once: true }}
-                variants={fadeUp} custom={i}
-                className="group p-8 rounded-xl border border-border bg-card hover:border-primary/30 hover:shadow-xl transition-all duration-300">
-                <h3 className="text-xl font-heading font-semibold text-card-foreground">{product.name}</h3>
-                <p className="mt-3 text-muted-foreground">{product.description}</p>
-                <div className="mt-5 flex items-center justify-between">
-                  <span className="text-2xl font-heading font-bold text-primary">{product.price}</span>
-                  <button className="flex items-center gap-1.5 text-sm text-primary font-medium hover:underline">
-                    {t('products.learnMore')} <ExternalLink className="h-4 w-4" />
-                  </button>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+          {filtered.length === 0 ? (
+            <div className="text-center py-16">
+              <Search className="h-12 w-12 mx-auto text-muted-foreground/40 mb-4" />
+              <p className="text-muted-foreground">{labels.noResults}</p>
+            </div>
+          ) : (
+            <div className="grid sm:grid-cols-2 gap-8 max-w-4xl mx-auto">
+              {filtered.map((product, i) => (
+                <motion.div key={product.id} initial="hidden" whileInView="visible" viewport={{ once: true }}
+                  variants={fadeUp} custom={i}
+                  className="group p-8 rounded-xl border border-border bg-card hover:border-primary/30 hover:shadow-xl transition-all duration-300">
+                  <h3 className="text-xl font-heading font-semibold text-card-foreground">{product.name}</h3>
+                  <p className="mt-3 text-muted-foreground">{product.description}</p>
+                  <div className="mt-5 flex items-center justify-between">
+                    <span className="text-2xl font-heading font-bold text-primary">{product.price}</span>
+                    <button className="flex items-center gap-1.5 text-sm text-primary font-medium hover:underline">
+                      {t('products.learnMore')} <ExternalLink className="h-4 w-4" />
+                    </button>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </div>
