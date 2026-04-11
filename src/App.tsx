@@ -13,6 +13,7 @@ import Contact from "./pages/Contact";
 import Reservation from "./pages/Reservation";
 import Blog from "./pages/Blog";
 import Products from "./pages/Products";
+import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AdminDashboard from "./pages/admin/Dashboard";
