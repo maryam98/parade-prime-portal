@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import AdminLayout from '@/components/AdminLayout';
-import { Plus, Edit, Trash2, Save, Loader2 } from 'lucide-react';
+import { Plus, Edit, Trash2, Save, Loader2, Layers } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useState } from 'react';
