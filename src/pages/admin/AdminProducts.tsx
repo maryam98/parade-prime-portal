@@ -5,15 +5,17 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useState } from 'react';
 import { toast } from '@/components/ui/sonner';
+import ImageUpload from '@/components/ImageUpload';
 
 interface ProductForm {
   name: string;
   description: string;
   price: string;
   status: string;
+  image_url: string;
 }
 
-const empty: ProductForm = { name: '', description: '', price: '', status: 'Active' };
+const empty: ProductForm = { name: '', description: '', price: '', status: 'Active', image_url: '' };
 
 const AdminProducts = () => {
   const { t } = useTranslation();
@@ -22,7 +24,7 @@ const AdminProducts = () => {
   const [form, setForm] = useState<ProductForm>(empty);
   const [adding, setAdding] = useState(false);
 
-  const { data: products = [], isLoading } = useQuery({
+  const { data: products = [] } = useQuery({
     queryKey: ['admin-products'],
     queryFn: async () => {
       const { data, error } = await supabase.from('products').select('*').order('sort_order');
@@ -33,11 +35,12 @@ const AdminProducts = () => {
 
   const save = useMutation({
     mutationFn: async () => {
+      const payload = { name: form.name, description: form.description || null, price: form.price || null, status: form.status, image_url: form.image_url || null };
       if (editing) {
-        const { error } = await supabase.from('products').update(form).eq('id', editing);
+        const { error } = await supabase.from('products').update(payload).eq('id', editing);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from('products').insert({ ...form, sort_order: products.length + 1 });
+        const { error } = await supabase.from('products').insert({ ...payload, sort_order: products.length + 1 });
         if (error) throw error;
       }
     },
@@ -53,9 +56,32 @@ const AdminProducts = () => {
     onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-products'] }); toast.success('Deleted'); },
   });
 
-  const startEdit = (p: any) => { setEditing(p.id); setForm({ name: p.name, description: p.description || '', price: p.price || '', status: p.status }); setAdding(false); };
+  const startEdit = (p: any) => { setEditing(p.id); setForm({ name: p.name, description: p.description || '', price: p.price || '', status: p.status, image_url: p.image_url || '' }); setAdding(false); };
   const startAdd = () => { setAdding(true); setEditing(null); setForm(empty); };
   const cancel = () => { setEditing(null); setAdding(false); setForm(empty); };
+
+  const formBlock = (
+    <div className="p-5 rounded-xl border border-primary/30 bg-card space-y-3">
+      <input placeholder="Name" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+        className="w-full px-3 py-2 rounded-lg border border-input bg-background text-foreground text-sm" />
+      <input placeholder="Description" value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
+        className="w-full px-3 py-2 rounded-lg border border-input bg-background text-foreground text-sm" />
+      <div className="flex gap-3">
+        <input placeholder="Price" value={form.price} onChange={e => setForm(f => ({ ...f, price: e.target.value }))}
+          className="flex-1 px-3 py-2 rounded-lg border border-input bg-background text-foreground text-sm" />
+        <select value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))}
+          className="px-3 py-2 rounded-lg border border-input bg-background text-foreground text-sm">
+          <option value="Active">Active</option>
+          <option value="Draft">Draft</option>
+        </select>
+      </div>
+      <ImageUpload value={form.image_url} onChange={url => setForm(f => ({ ...f, image_url: url }))} folder="products" />
+      <div className="flex gap-2">
+        <button onClick={() => save.mutate()} className="flex items-center gap-1 px-3 py-1.5 bg-primary text-primary-foreground rounded-lg text-sm"><Save className="h-3.5 w-3.5" /> Save</button>
+        <button onClick={cancel} className="flex items-center gap-1 px-3 py-1.5 border border-border rounded-lg text-sm text-muted-foreground"><X className="h-3.5 w-3.5" /> Cancel</button>
+      </div>
+    </div>
+  );
 
   return (
     <AdminLayout>
@@ -67,27 +93,7 @@ const AdminProducts = () => {
           </button>
         </div>
 
-        {adding && (
-          <div className="p-5 rounded-xl border border-primary/30 bg-card space-y-3">
-            <input placeholder="Name" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-              className="w-full px-3 py-2 rounded-lg border border-input bg-background text-foreground text-sm" />
-            <input placeholder="Description" value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
-              className="w-full px-3 py-2 rounded-lg border border-input bg-background text-foreground text-sm" />
-            <div className="flex gap-3">
-              <input placeholder="Price" value={form.price} onChange={e => setForm(f => ({ ...f, price: e.target.value }))}
-                className="flex-1 px-3 py-2 rounded-lg border border-input bg-background text-foreground text-sm" />
-              <select value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))}
-                className="px-3 py-2 rounded-lg border border-input bg-background text-foreground text-sm">
-                <option value="Active">Active</option>
-                <option value="Draft">Draft</option>
-              </select>
-            </div>
-            <div className="flex gap-2">
-              <button onClick={() => save.mutate()} className="flex items-center gap-1 px-3 py-1.5 bg-primary text-primary-foreground rounded-lg text-sm"><Save className="h-3.5 w-3.5" /> Save</button>
-              <button onClick={cancel} className="flex items-center gap-1 px-3 py-1.5 border border-border rounded-lg text-sm text-muted-foreground"><X className="h-3.5 w-3.5" /> Cancel</button>
-            </div>
-          </div>
-        )}
+        {adding && formBlock}
 
         <div className="rounded-xl border border-border bg-card overflow-hidden">
           <table className="w-full text-sm">
@@ -103,22 +109,15 @@ const AdminProducts = () => {
               {products.map((p) => (
                 <tr key={p.id} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
                   {editing === p.id ? (
-                    <>
-                      <td className="px-5 py-2"><input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} className="w-full px-2 py-1 rounded border border-input bg-background text-foreground text-sm" /></td>
-                      <td className="px-5 py-2"><input value={form.price} onChange={e => setForm(f => ({ ...f, price: e.target.value }))} className="w-full px-2 py-1 rounded border border-input bg-background text-foreground text-sm" /></td>
-                      <td className="px-5 py-2">
-                        <select value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))} className="px-2 py-1 rounded border border-input bg-background text-foreground text-sm">
-                          <option value="Active">Active</option><option value="Draft">Draft</option>
-                        </select>
-                      </td>
-                      <td className="px-5 py-2 flex gap-1">
-                        <button onClick={() => save.mutate()} className="p-1.5 rounded hover:bg-green-500/10 text-green-600"><Save className="h-4 w-4" /></button>
-                        <button onClick={cancel} className="p-1.5 rounded hover:bg-muted text-muted-foreground"><X className="h-4 w-4" /></button>
-                      </td>
-                    </>
+                    <td colSpan={4} className="p-0">{formBlock}</td>
                   ) : (
                     <>
-                      <td className="px-5 py-3 text-card-foreground font-medium">{p.name}</td>
+                      <td className="px-5 py-3">
+                        <div className="flex items-center gap-3">
+                          {p.image_url && <img src={p.image_url} alt="" className="w-8 h-8 rounded object-cover" />}
+                          <span className="text-card-foreground font-medium">{p.name}</span>
+                        </div>
+                      </td>
                       <td className="px-5 py-3 text-muted-foreground">{p.price}</td>
                       <td className="px-5 py-3">
                         <span className={`text-xs px-2 py-1 rounded-full ${p.status === 'Active' ? 'bg-green-500/10 text-green-600' : 'bg-muted text-muted-foreground'}`}>{p.status}</span>
