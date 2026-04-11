@@ -40,6 +40,7 @@ const Footer = () => {
                 { path: '/services', label: t('nav.services') },
                 { path: '/blog', label: t('nav.blog') },
                 { path: '/products', label: t('nav.products') },
+                { path: '/faq', label: isRtl ? 'سوالات متداول' : i18n.language === 'de' ? 'FAQ' : 'FAQ' },
               ].map((item) => (
                 <Link key={item.path} to={item.path}
                   className="text-sm text-accent-foreground/60 hover:text-primary transition-colors">
