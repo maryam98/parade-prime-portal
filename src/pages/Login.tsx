@@ -1,17 +1,31 @@
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Login = () => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.language === 'fa';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { signIn } = useAuth();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Will connect to backend later
+    setError('');
+    setLoading(true);
+
+    const { error } = await signIn(email, password);
+    if (error) {
+      setError(error.message);
+    } else {
+      navigate('/');
+    }
+    setLoading(false);
   };
 
   return (
@@ -24,6 +38,12 @@ const Login = () => {
         <div className="text-center mb-8">
           <h1 className="text-2xl font-heading font-bold text-card-foreground">{t('auth.login')}</h1>
         </div>
+
+        {error && (
+          <div className="mb-4 p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
@@ -48,14 +68,20 @@ const Login = () => {
           </div>
           <button
             type="submit"
-            className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors"
+            disabled={loading}
+            className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
           >
-            {t('auth.loginBtn')}
+            {loading ? t('common.loading') : t('auth.loginBtn')}
           </button>
         </form>
 
-        <div className="mt-6 text-center">
-          <Link to="/" className="text-sm text-primary hover:underline">{t('auth.forgotPassword')}</Link>
+        <div className="mt-6 text-center space-y-2">
+          <p className="text-sm text-muted-foreground">
+            {t('auth.noAccount')}{' '}
+            <Link to="/register" className="text-primary hover:underline font-medium">
+              {t('auth.register')}
+            </Link>
+          </p>
         </div>
       </motion.div>
     </div>

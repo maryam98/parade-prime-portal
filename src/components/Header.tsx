@@ -1,8 +1,9 @@
 import { useTranslation } from 'react-i18next';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { Menu, X, Globe } from 'lucide-react';
+import { Menu, X, Globe, LogOut, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '@/contexts/AuthContext';
 import logo from '@/assets/logo.png';
 
 const languages = [
@@ -14,8 +15,11 @@ const languages = [
 const Header = () => {
   const { t, i18n } = useTranslation();
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, profile, isAdmin, signOut } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
 
   const isRtl = i18n.language === 'fa';
 
@@ -29,6 +33,12 @@ const Header = () => {
   ];
 
   const isActive = (path: string) => location.pathname === path;
+
+  const handleSignOut = async () => {
+    await signOut();
+    setUserMenuOpen(false);
+    navigate('/');
+  };
 
   return (
     <header dir={isRtl ? 'rtl' : 'ltr'} className="fixed top-0 left-0 right-0 z-50 bg-accent/95 backdrop-blur-md border-b border-border/10">
@@ -45,9 +55,7 @@ const Header = () => {
               key={item.path}
               to={item.path}
               className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                isActive(item.path)
-                  ? 'text-primary'
-                  : 'text-accent-foreground/70 hover:text-accent-foreground'
+                isActive(item.path) ? 'text-primary' : 'text-accent-foreground/70 hover:text-accent-foreground'
               }`}
             >
               {item.label}
@@ -59,7 +67,7 @@ const Header = () => {
           {/* Language Switcher */}
           <div className="relative">
             <button
-              onClick={() => setLangOpen(!langOpen)}
+              onClick={() => { setLangOpen(!langOpen); setUserMenuOpen(false); }}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm text-accent-foreground/70 hover:text-accent-foreground transition-colors"
             >
               <Globe className="h-4 w-4" />
@@ -99,19 +107,56 @@ const Header = () => {
           >
             {t('nav.reservation')}
           </Link>
-          <Link
-            to="/login"
-            className="px-4 py-2 border border-accent-foreground/20 text-accent-foreground rounded-lg text-sm font-medium hover:bg-accent-foreground/10 transition-colors"
-          >
-            {t('nav.login')}
-          </Link>
+
+          {user ? (
+            <div className="relative">
+              <button
+                onClick={() => { setUserMenuOpen(!userMenuOpen); setLangOpen(false); }}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-accent-foreground/20 text-accent-foreground text-sm hover:bg-accent-foreground/10 transition-colors"
+              >
+                <User className="h-4 w-4" />
+                <span className="max-w-[100px] truncate">{profile?.display_name || user.email}</span>
+              </button>
+              <AnimatePresence>
+                {userMenuOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    className="absolute top-full mt-1 right-0 w-48 bg-card border border-border rounded-lg shadow-lg overflow-hidden"
+                  >
+                    {isAdmin && (
+                      <Link
+                        to="/admin"
+                        onClick={() => setUserMenuOpen(false)}
+                        className="block px-4 py-2.5 text-sm text-foreground hover:bg-muted transition-colors"
+                      >
+                        {t('nav.admin')}
+                      </Link>
+                    )}
+                    <button
+                      onClick={handleSignOut}
+                      className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-destructive hover:bg-muted transition-colors"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      {i18n.language === 'fa' ? 'خروج' : i18n.language === 'de' ? 'Abmelden' : 'Sign Out'}
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ) : (
+            <Link
+              to="/login"
+              className="px-4 py-2 border border-accent-foreground/20 text-accent-foreground rounded-lg text-sm font-medium hover:bg-accent-foreground/10 transition-colors"
+            >
+              {t('nav.login')}
+            </Link>
+          )}
         </div>
 
         {/* Mobile Toggle */}
-        <button
-          onClick={() => setMobileOpen(!mobileOpen)}
-          className="lg:hidden text-accent-foreground"
-        >
+        <button onClick={() => setMobileOpen(!mobileOpen)} className="lg:hidden text-accent-foreground">
           {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
       </div>
@@ -138,6 +183,15 @@ const Header = () => {
                   {item.label}
                 </Link>
               ))}
+              {user && isAdmin && (
+                <Link
+                  to="/admin"
+                  onClick={() => setMobileOpen(false)}
+                  className="px-3 py-2 rounded-md text-sm font-medium text-accent-foreground/70"
+                >
+                  {t('nav.admin')}
+                </Link>
+              )}
               <div className="flex gap-2 pt-2 border-t border-border/10">
                 {languages.map((lang) => (
                   <button
@@ -147,9 +201,7 @@ const Header = () => {
                       document.documentElement.dir = lang.code === 'fa' ? 'rtl' : 'ltr';
                     }}
                     className={`px-3 py-1.5 rounded text-sm ${
-                      i18n.language === lang.code
-                        ? 'bg-primary text-primary-foreground'
-                        : 'text-accent-foreground/70'
+                      i18n.language === lang.code ? 'bg-primary text-primary-foreground' : 'text-accent-foreground/70'
                     }`}
                   >
                     {lang.label}
@@ -163,13 +215,22 @@ const Header = () => {
               >
                 {t('nav.reservation')}
               </Link>
-              <Link
-                to="/login"
-                onClick={() => setMobileOpen(false)}
-                className="px-4 py-2 border border-accent-foreground/20 text-accent-foreground rounded-lg text-sm font-medium text-center"
-              >
-                {t('nav.login')}
-              </Link>
+              {user ? (
+                <button
+                  onClick={() => { handleSignOut(); setMobileOpen(false); }}
+                  className="px-4 py-2 border border-destructive/30 text-destructive rounded-lg text-sm font-medium text-center"
+                >
+                  {i18n.language === 'fa' ? 'خروج' : i18n.language === 'de' ? 'Abmelden' : 'Sign Out'}
+                </button>
+              ) : (
+                <Link
+                  to="/login"
+                  onClick={() => setMobileOpen(false)}
+                  className="px-4 py-2 border border-accent-foreground/20 text-accent-foreground rounded-lg text-sm font-medium text-center"
+                >
+                  {t('nav.login')}
+                </Link>
+              )}
             </nav>
           </motion.div>
         )}
