@@ -1,10 +1,15 @@
 import { useTranslation } from 'react-i18next';
 import AdminLayout from '@/components/AdminLayout';
-import { Plus, Edit, Trash2, Save, X } from 'lucide-react';
+import { Plus, Edit, Trash2, Save, Loader2, Layers } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useState } from 'react';
 import { toast } from '@/components/ui/sonner';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 interface ServiceForm {
   title: string;
@@ -14,14 +19,14 @@ interface ServiceForm {
 }
 
 const empty: ServiceForm = { title: '', description: '', icon: 'Code', status: 'Active' };
-const icons = ['Code', 'Smartphone', 'Palette', 'Lightbulb', 'Cloud', 'Headphones'];
+const icons = ['Code', 'Smartphone', 'Palette', 'Lightbulb', 'Cloud', 'Headphones', 'Shield', 'Zap', 'Globe', 'Database'];
 
 const AdminServices = () => {
   const { t } = useTranslation();
   const qc = useQueryClient();
   const [editing, setEditing] = useState<string | null>(null);
   const [form, setForm] = useState<ServiceForm>(empty);
-  const [adding, setAdding] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
   const { data: services = [], isLoading } = useQuery({
     queryKey: ['admin-services'],
@@ -34,16 +39,16 @@ const AdminServices = () => {
 
   const save = useMutation({
     mutationFn: async () => {
-      if (editing) {
-        const { error } = await supabase.from('services').update(form).eq('id', editing);
+      if (editing === 'new') {
+        const { error } = await supabase.from('services').insert({ ...form, sort_order: services.length + 1 });
         if (error) throw error;
       } else {
-        const { error } = await supabase.from('services').insert({ ...form, sort_order: services.length + 1 });
+        const { error } = await supabase.from('services').update(form).eq('id', editing!);
         if (error) throw error;
       }
     },
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-services'] }); setEditing(null); setAdding(false); setForm(empty); toast.success('Saved'); },
-    onError: () => toast.error('Error saving'),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-services'] }); setEditing(null); toast.success('Service saved successfully'); },
+    onError: () => toast.error('Failed to save service'),
   });
 
   const remove = useMutation({
@@ -51,98 +56,118 @@ const AdminServices = () => {
       const { error } = await supabase.from('services').delete().eq('id', id);
       if (error) throw error;
     },
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-services'] }); toast.success('Deleted'); },
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-services'] }); setDeleteId(null); toast.success('Service deleted'); },
+    onError: () => toast.error('Failed to delete service'),
   });
 
-  const startEdit = (s: any) => { setEditing(s.id); setForm({ title: s.title, description: s.description || '', icon: s.icon, status: s.status }); setAdding(false); };
-  const startAdd = () => { setAdding(true); setEditing(null); setForm(empty); };
-  const cancel = () => { setEditing(null); setAdding(false); setForm(empty); };
+  const openEdit = (s: any) => {
+    setForm({ title: s.title, description: s.description || '', icon: s.icon, status: s.status });
+    setEditing(s.id);
+  };
 
   return (
     <AdminLayout>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-heading font-bold text-foreground">{t('admin.services')}</h1>
-          <button onClick={startAdd} className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors">
+          <div>
+            <h1 className="text-2xl font-heading font-bold text-foreground">{t('admin.services')}</h1>
+            <p className="text-sm text-muted-foreground mt-1">Manage your service offerings</p>
+          </div>
+          <Button onClick={() => { setForm(empty); setEditing('new'); }}>
             <Plus className="h-4 w-4" /> Add Service
-          </button>
+          </Button>
         </div>
 
-        {adding && (
-          <div className="p-5 rounded-xl border border-primary/30 bg-card space-y-3">
-            <input placeholder="Title" value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
-              className="w-full px-3 py-2 rounded-lg border border-input bg-background text-foreground text-sm" />
-            <input placeholder="Description" value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
-              className="w-full px-3 py-2 rounded-lg border border-input bg-background text-foreground text-sm" />
-            <div className="flex gap-3">
-              <select value={form.icon} onChange={e => setForm(f => ({ ...f, icon: e.target.value }))}
-                className="px-3 py-2 rounded-lg border border-input bg-background text-foreground text-sm">
-                {icons.map(ic => <option key={ic} value={ic}>{ic}</option>)}
-              </select>
-              <select value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))}
-                className="px-3 py-2 rounded-lg border border-input bg-background text-foreground text-sm">
-                <option value="Active">Active</option>
-                <option value="Draft">Draft</option>
-              </select>
-            </div>
-            <div className="flex gap-2">
-              <button onClick={() => save.mutate()} className="flex items-center gap-1 px-3 py-1.5 bg-primary text-primary-foreground rounded-lg text-sm"><Save className="h-3.5 w-3.5" /> Save</button>
-              <button onClick={cancel} className="flex items-center gap-1 px-3 py-1.5 border border-border rounded-lg text-sm text-muted-foreground"><X className="h-3.5 w-3.5" /> Cancel</button>
-            </div>
+        {isLoading ? (
+          <div className="flex items-center justify-center py-20">
+            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+          </div>
+        ) : services.length === 0 ? (
+          <div className="text-center py-20 border border-dashed border-border rounded-xl">
+            <Layers className="h-12 w-12 mx-auto text-muted-foreground/30 mb-3" />
+            <p className="text-muted-foreground">No services yet</p>
+            <Button variant="outline" className="mt-4" onClick={() => { setForm(empty); setEditing('new'); }}>
+              <Plus className="h-4 w-4" /> Add your first service
+            </Button>
+          </div>
+        ) : (
+          <div className="rounded-xl border border-border bg-card overflow-hidden">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border bg-muted/50">
+                  <th className="text-left px-5 py-3 text-muted-foreground font-medium">Title</th>
+                  <th className="text-left px-5 py-3 text-muted-foreground font-medium">Icon</th>
+                  <th className="text-left px-5 py-3 text-muted-foreground font-medium">Status</th>
+                  <th className="text-right px-5 py-3 text-muted-foreground font-medium">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {services.map((svc) => (
+                  <tr key={svc.id} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
+                    <td className="px-5 py-3 text-card-foreground font-medium">{svc.title}</td>
+                    <td className="px-5 py-3">
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-muted text-muted-foreground">{svc.icon}</span>
+                    </td>
+                    <td className="px-5 py-3">
+                      <span className={`text-xs px-2 py-1 rounded-full ${svc.status === 'Active' ? 'bg-green-500/10 text-green-600' : 'bg-muted text-muted-foreground'}`}>{svc.status}</span>
+                    </td>
+                    <td className="px-5 py-3 text-right">
+                      <Button variant="ghost" size="icon" onClick={() => openEdit(svc)}><Edit className="h-4 w-4" /></Button>
+                      <Button variant="ghost" size="icon" onClick={() => setDeleteId(svc.id)} className="text-muted-foreground hover:text-destructive"><Trash2 className="h-4 w-4" /></Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
 
-        <div className="rounded-xl border border-border bg-card overflow-hidden">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-border bg-muted/50">
-                <th className="text-left px-5 py-3 text-muted-foreground font-medium">Title</th>
-                <th className="text-left px-5 py-3 text-muted-foreground font-medium">Icon</th>
-                <th className="text-left px-5 py-3 text-muted-foreground font-medium">Status</th>
-                <th className="text-left px-5 py-3 text-muted-foreground font-medium">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {services.map((svc) => (
-                <tr key={svc.id} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
-                  {editing === svc.id ? (
-                    <>
-                      <td className="px-5 py-2"><input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} className="w-full px-2 py-1 rounded border border-input bg-background text-foreground text-sm" /></td>
-                      <td className="px-5 py-2">
-                        <select value={form.icon} onChange={e => setForm(f => ({ ...f, icon: e.target.value }))} className="px-2 py-1 rounded border border-input bg-background text-foreground text-sm">
-                          {icons.map(ic => <option key={ic} value={ic}>{ic}</option>)}
-                        </select>
-                      </td>
-                      <td className="px-5 py-2">
-                        <select value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))} className="px-2 py-1 rounded border border-input bg-background text-foreground text-sm">
-                          <option value="Active">Active</option><option value="Draft">Draft</option>
-                        </select>
-                      </td>
-                      <td className="px-5 py-2 flex gap-1">
-                        <button onClick={() => save.mutate()} className="p-1.5 rounded hover:bg-green-500/10 text-green-600"><Save className="h-4 w-4" /></button>
-                        <button onClick={cancel} className="p-1.5 rounded hover:bg-muted text-muted-foreground"><X className="h-4 w-4" /></button>
-                      </td>
-                    </>
-                  ) : (
-                    <>
-                      <td className="px-5 py-3 text-card-foreground font-medium">{svc.title}</td>
-                      <td className="px-5 py-3 text-muted-foreground">{svc.icon}</td>
-                      <td className="px-5 py-3">
-                        <span className={`text-xs px-2 py-1 rounded-full ${svc.status === 'Active' ? 'bg-green-500/10 text-green-600' : 'bg-muted text-muted-foreground'}`}>{svc.status}</span>
-                      </td>
-                      <td className="px-5 py-3">
-                        <div className="flex items-center gap-2">
-                          <button onClick={() => startEdit(svc)} className="p-1.5 rounded hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"><Edit className="h-4 w-4" /></button>
-                          <button onClick={() => remove.mutate(svc.id)} className="p-1.5 rounded hover:bg-destructive/10 transition-colors text-muted-foreground hover:text-destructive"><Trash2 className="h-4 w-4" /></button>
-                        </div>
-                      </td>
-                    </>
-                  )}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        {/* Form Dialog */}
+        <Dialog open={!!editing} onOpenChange={(open) => !open && setEditing(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>{editing === 'new' ? 'New Service' : 'Edit Service'}</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 pt-2">
+              <div><Label>Title</Label><Input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} className="mt-1.5" /></div>
+              <div><Label>Description</Label><Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} className="mt-1.5" /></div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label>Icon</Label>
+                  <select value={form.icon} onChange={e => setForm(f => ({ ...f, icon: e.target.value }))}
+                    className="mt-1.5 w-full h-10 px-3 rounded-md border border-input bg-background text-sm">
+                    {icons.map(ic => <option key={ic} value={ic}>{ic}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <Label>Status</Label>
+                  <select value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))}
+                    className="mt-1.5 w-full h-10 px-3 rounded-md border border-input bg-background text-sm">
+                    <option value="Active">Active</option>
+                    <option value="Draft">Draft</option>
+                  </select>
+                </div>
+              </div>
+              <Button onClick={() => save.mutate()} disabled={save.isPending || !form.title.trim()} className="w-full">
+                {save.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />} Save
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Delete Confirmation */}
+        <AlertDialog open={!!deleteId} onOpenChange={(open) => !open && setDeleteId(null)}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete Service</AlertDialogTitle>
+              <AlertDialogDescription>Are you sure you want to delete this service? This action cannot be undone.</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={() => deleteId && remove.mutate(deleteId)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">Delete</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </AdminLayout>
   );
