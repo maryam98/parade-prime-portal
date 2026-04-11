@@ -5,6 +5,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useState } from 'react';
 import { toast } from '@/components/ui/sonner';
+import ImageUpload from '@/components/ImageUpload';
 
 interface SlideForm {
   title: string;
@@ -88,7 +89,7 @@ const AdminSlider = () => {
         {inp('cta_text', 'Button Text')}
         {inp('cta_link', 'Button Link (e.g. /contact)')}
       </div>
-      {inp('image_url', 'Image URL')}
+      <ImageUpload value={form.image_url} onChange={url => setForm(f => ({ ...f, image_url: url }))} folder="slides" />
       <div className="flex items-center gap-3">
         <select value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))}
           className="px-3 py-2 rounded-lg border border-input bg-background text-foreground text-sm">
