@@ -1,0 +1,131 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About Us",
+    "services": "Services",
+    "blog": "Blog",
+    "products": "Products",
+    "contact": "Contact",
+    "reservation": "Book Now",
+    "admin": "Admin Panel",
+    "login": "Login"
+  },
+  "hero": {
+    "title": "Building Digital Solutions",
+    "subtitle": "That Drive Success",
+    "description": "We craft innovative software solutions, from web applications to enterprise systems, helping businesses thrive in the digital era.",
+    "cta": "Get Started",
+    "cta2": "Our Services"
+  },
+  "services": {
+    "title": "Our Services",
+    "subtitle": "Comprehensive IT solutions tailored to your business needs",
+    "web": "Web Development",
+    "webDesc": "Modern, responsive websites and web applications built with cutting-edge technologies.",
+    "mobile": "Mobile Development",
+    "mobileDesc": "Native and cross-platform mobile apps for iOS and Android.",
+    "design": "UI/UX Design",
+    "designDesc": "User-centered design that creates intuitive and engaging digital experiences.",
+    "consulting": "IT Consulting",
+    "consultingDesc": "Strategic technology consulting to optimize your business processes.",
+    "cloud": "Cloud Solutions",
+    "cloudDesc": "Scalable cloud infrastructure and migration services.",
+    "support": "Support & Maintenance",
+    "supportDesc": "24/7 technical support and ongoing maintenance for your systems."
+  },
+  "about": {
+    "title": "About Paradaim",
+    "subtitle": "We are a team of passionate developers and designers",
+    "description": "Founded with a vision to transform businesses through technology, Paradaim delivers cutting-edge software solutions that empower organizations to achieve their goals.",
+    "mission": "Our Mission",
+    "missionText": "To provide innovative, reliable, and scalable technology solutions that help businesses grow and succeed in the digital world.",
+    "vision": "Our Vision",
+    "visionText": "To be the leading technology partner for businesses seeking digital transformation across Europe and the Middle East.",
+    "stats": {
+      "projects": "Projects Delivered",
+      "clients": "Happy Clients",
+      "years": "Years Experience",
+      "team": "Team Members"
+    }
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Get in touch with our team",
+    "name": "Full Name",
+    "email": "Email Address",
+    "phone": "Phone Number",
+    "message": "Your Message",
+    "send": "Send Message",
+    "success": "Message sent successfully!",
+    "address": "Address",
+    "addressText": "Berlin, Germany"
+  },
+  "reservation": {
+    "title": "Book a Consultation",
+    "subtitle": "Schedule a meeting with our experts",
+    "date": "Select Date",
+    "time": "Select Time",
+    "name": "Your Name",
+    "email": "Email",
+    "phone": "Phone",
+    "notes": "Additional Notes",
+    "submit": "Confirm Booking",
+    "success": "Booking confirmed!"
+  },
+  "blog": {
+    "title": "Articles & Insights",
+    "subtitle": "Latest news and technical articles from our team",
+    "readMore": "Read More",
+    "category": "Category",
+    "date": "Date"
+  },
+  "products": {
+    "title": "Our Products",
+    "subtitle": "Software solutions ready to deploy",
+    "learnMore": "Learn More",
+    "price": "Price"
+  },
+  "footer": {
+    "description": "Innovative software solutions for your business growth.",
+    "quickLinks": "Quick Links",
+    "contactInfo": "Contact Info",
+    "followUs": "Follow Us",
+    "rights": "All rights reserved."
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search..."
+  },
+  "admin": {
+    "dashboard": "Dashboard",
+    "services": "Services",
+    "articles": "Articles",
+    "products": "Products",
+    "slider": "Slider",
+    "messages": "Messages",
+    "reservations": "Reservations",
+    "users": "Users",
+    "settings": "Settings",
+    "totalVisits": "Total Visits",
+    "newMessages": "New Messages",
+    "upcomingBookings": "Upcoming Bookings",
+    "activeServices": "Active Services"
+  },
+  "auth": {
+    "login": "Login",
+    "email": "Email",
+    "password": "Password",
+    "loginBtn": "Sign In",
+    "forgotPassword": "Forgot Password?",
+    "noAccount": "Don't have an account?",
+    "register": "Register"
+  }
+}

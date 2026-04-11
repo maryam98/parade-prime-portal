@@ -1,0 +1,131 @@
+{
+  "nav": {
+    "home": "Startseite",
+    "about": "Über Uns",
+    "services": "Dienstleistungen",
+    "blog": "Blog",
+    "products": "Produkte",
+    "contact": "Kontakt",
+    "reservation": "Termin buchen",
+    "admin": "Admin-Panel",
+    "login": "Anmelden"
+  },
+  "hero": {
+    "title": "Digitale Lösungen entwickeln",
+    "subtitle": "Die Erfolg vorantreiben",
+    "description": "Wir entwickeln innovative Softwarelösungen, von Webanwendungen bis hin zu Unternehmenssystemen, die Unternehmen im digitalen Zeitalter voranbringen.",
+    "cta": "Loslegen",
+    "cta2": "Unsere Dienste"
+  },
+  "services": {
+    "title": "Unsere Dienstleistungen",
+    "subtitle": "Umfassende IT-Lösungen, maßgeschneidert auf Ihre Geschäftsanforderungen",
+    "web": "Webentwicklung",
+    "webDesc": "Moderne, responsive Websites und Webanwendungen mit neuesten Technologien.",
+    "mobile": "Mobile Entwicklung",
+    "mobileDesc": "Native und plattformübergreifende mobile Apps für iOS und Android.",
+    "design": "UI/UX Design",
+    "designDesc": "Benutzerzentriertes Design für intuitive und ansprechende digitale Erlebnisse.",
+    "consulting": "IT-Beratung",
+    "consultingDesc": "Strategische Technologieberatung zur Optimierung Ihrer Geschäftsprozesse.",
+    "cloud": "Cloud-Lösungen",
+    "cloudDesc": "Skalierbare Cloud-Infrastruktur und Migrationsdienste.",
+    "support": "Support & Wartung",
+    "supportDesc": "24/7 technischer Support und laufende Wartung Ihrer Systeme."
+  },
+  "about": {
+    "title": "Über Paradaim",
+    "subtitle": "Wir sind ein Team leidenschaftlicher Entwickler und Designer",
+    "description": "Gegründet mit der Vision, Unternehmen durch Technologie zu transformieren, liefert Paradaim hochmoderne Softwarelösungen.",
+    "mission": "Unsere Mission",
+    "missionText": "Innovative, zuverlässige und skalierbare Technologielösungen bereitzustellen, die Unternehmen helfen, in der digitalen Welt zu wachsen.",
+    "vision": "Unsere Vision",
+    "visionText": "Der führende Technologiepartner für Unternehmen zu sein, die eine digitale Transformation in Europa und dem Nahen Osten anstreben.",
+    "stats": {
+      "projects": "Gelieferte Projekte",
+      "clients": "Zufriedene Kunden",
+      "years": "Jahre Erfahrung",
+      "team": "Teammitglieder"
+    }
+  },
+  "contact": {
+    "title": "Kontakt",
+    "subtitle": "Nehmen Sie Kontakt mit unserem Team auf",
+    "name": "Vollständiger Name",
+    "email": "E-Mail-Adresse",
+    "phone": "Telefonnummer",
+    "message": "Ihre Nachricht",
+    "send": "Nachricht senden",
+    "success": "Nachricht erfolgreich gesendet!",
+    "address": "Adresse",
+    "addressText": "Berlin, Deutschland"
+  },
+  "reservation": {
+    "title": "Beratung buchen",
+    "subtitle": "Vereinbaren Sie einen Termin mit unseren Experten",
+    "date": "Datum wählen",
+    "time": "Zeit wählen",
+    "name": "Ihr Name",
+    "email": "E-Mail",
+    "phone": "Telefon",
+    "notes": "Zusätzliche Anmerkungen",
+    "submit": "Buchung bestätigen",
+    "success": "Buchung bestätigt!"
+  },
+  "blog": {
+    "title": "Artikel & Einblicke",
+    "subtitle": "Neueste Nachrichten und technische Artikel unseres Teams",
+    "readMore": "Weiterlesen",
+    "category": "Kategorie",
+    "date": "Datum"
+  },
+  "products": {
+    "title": "Unsere Produkte",
+    "subtitle": "Einsatzbereite Softwarelösungen",
+    "learnMore": "Mehr erfahren",
+    "price": "Preis"
+  },
+  "footer": {
+    "description": "Innovative Softwarelösungen für Ihr Unternehmenswachstum.",
+    "quickLinks": "Schnelllinks",
+    "contactInfo": "Kontaktinformationen",
+    "followUs": "Folgen Sie uns",
+    "rights": "Alle Rechte vorbehalten."
+  },
+  "common": {
+    "loading": "Laden...",
+    "error": "Etwas ist schiefgelaufen",
+    "back": "Zurück",
+    "next": "Weiter",
+    "submit": "Absenden",
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "search": "Suchen..."
+  },
+  "admin": {
+    "dashboard": "Dashboard",
+    "services": "Dienstleistungen",
+    "articles": "Artikel",
+    "products": "Produkte",
+    "slider": "Slider",
+    "messages": "Nachrichten",
+    "reservations": "Reservierungen",
+    "users": "Benutzer",
+    "settings": "Einstellungen",
+    "totalVisits": "Gesamtbesuche",
+    "newMessages": "Neue Nachrichten",
+    "upcomingBookings": "Kommende Buchungen",
+    "activeServices": "Aktive Dienste"
+  },
+  "auth": {
+    "login": "Anmelden",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "loginBtn": "Einloggen",
+    "forgotPassword": "Passwort vergessen?",
+    "noAccount": "Noch kein Konto?",
+    "register": "Registrieren"
+  }
+}
