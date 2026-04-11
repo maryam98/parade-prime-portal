@@ -125,6 +125,13 @@ const Header = () => {
                     exit={{ opacity: 0, y: -8 }}
                     className="absolute top-full mt-1 right-0 w-48 bg-card border border-border rounded-lg shadow-lg overflow-hidden"
                   >
+                    <Link
+                      to="/profile"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="block px-4 py-2.5 text-sm text-foreground hover:bg-muted transition-colors"
+                    >
+                      {i18n.language === 'fa' ? 'پروفایل' : i18n.language === 'de' ? 'Profil' : 'Profile'}
+                    </Link>
                     {isAdmin && (
                       <Link
                         to="/admin"

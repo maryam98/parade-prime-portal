@@ -13,6 +13,7 @@ import Contact from "./pages/Contact";
 import Reservation from "./pages/Reservation";
 import Blog from "./pages/Blog";
 import Products from "./pages/Products";
+import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AdminDashboard from "./pages/admin/Dashboard";
@@ -46,6 +47,7 @@ const App = () => (
             <Route path="/products" element={<Layout><Products /></Layout>} />
             <Route path="/login" element={<Layout><Login /></Layout>} />
             <Route path="/register" element={<Layout><Register /></Layout>} />
+            <Route path="/profile" element={<ProtectedRoute><Layout><Profile /></Layout></ProtectedRoute>} />
 
             {/* Admin pages - protected */}
             <Route path="/admin" element={<ProtectedRoute requireAdmin><AdminDashboard /></ProtectedRoute>} />
