@@ -12,6 +12,7 @@ import Services from "./pages/Services";
 import Contact from "./pages/Contact";
 import Reservation from "./pages/Reservation";
 import Blog from "./pages/Blog";
+import ArticleDetail from "./pages/ArticleDetail";
 import Products from "./pages/Products";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";
@@ -44,6 +45,7 @@ const App = () => (
             <Route path="/contact" element={<Layout><Contact /></Layout>} />
             <Route path="/reservation" element={<Layout><Reservation /></Layout>} />
             <Route path="/blog" element={<Layout><Blog /></Layout>} />
+            <Route path="/blog/:id" element={<Layout><ArticleDetail /></Layout>} />
             <Route path="/products" element={<Layout><Products /></Layout>} />
             <Route path="/login" element={<Layout><Login /></Layout>} />
             <Route path="/register" element={<Layout><Register /></Layout>} />
