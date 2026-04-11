@@ -2,6 +2,9 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Calendar } from '@/components/ui/calendar';
 import { useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from '@/components/ui/sonner';
+import { format } from 'date-fns';
 
 const timeSlots = ['09:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00'];
 
@@ -10,12 +13,33 @@ const Reservation = () => {
   const isRtl = i18n.language === 'fa';
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [selectedTime, setSelectedTime] = useState('');
-  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [form, setForm] = useState({ name: '', email: '', phone: '', notes: '' });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 3000);
+    if (!date || !selectedTime) {
+      toast.error(t('reservation.selectDateTime', 'لطفاً تاریخ و ساعت را انتخاب کنید'));
+      return;
+    }
+    setLoading(true);
+    const { error } = await supabase.from('reservations').insert({
+      name: form.name.trim(),
+      email: form.email.trim(),
+      phone: form.phone.trim() || null,
+      notes: form.notes.trim() || null,
+      reservation_date: format(date, 'yyyy-MM-dd'),
+      reservation_time: selectedTime,
+    });
+    setLoading(false);
+    if (error) {
+      toast.error(t('reservation.error', 'خطا در ثبت رزرو'));
+    } else {
+      toast.success(t('reservation.success'));
+      setForm({ name: '', email: '', phone: '', notes: '' });
+      setDate(undefined);
+      setSelectedTime('');
+    }
   };
 
   return (
@@ -48,35 +72,24 @@ const Reservation = () => {
             animate={{ opacity: 1, y: 0 }}
             className="grid lg:grid-cols-2 gap-10"
           >
-            {/* Calendar & Time */}
             <div className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-foreground mb-3">{t('reservation.date')}</label>
                 <div className="border border-border rounded-xl p-4 bg-card">
-                  <Calendar
-                    mode="single"
-                    selected={date}
-                    onSelect={setDate}
-                    disabled={(d) => d < new Date() || d.getDay() === 0}
-                    className="mx-auto"
-                  />
+                  <Calendar mode="single" selected={date} onSelect={setDate}
+                    disabled={(d) => d < new Date() || d.getDay() === 0} className="mx-auto" />
                 </div>
               </div>
-
               <div>
                 <label className="block text-sm font-medium text-foreground mb-3">{t('reservation.time')}</label>
                 <div className="grid grid-cols-4 gap-2">
                   {timeSlots.map((time) => (
-                    <button
-                      key={time}
-                      type="button"
-                      onClick={() => setSelectedTime(time)}
+                    <button key={time} type="button" onClick={() => setSelectedTime(time)}
                       className={`px-3 py-2 rounded-lg text-sm font-medium border transition-colors ${
                         selectedTime === time
                           ? 'bg-primary text-primary-foreground border-primary'
                           : 'border-border text-foreground hover:border-primary/30'
-                      }`}
-                    >
+                      }`}>
                       {time}
                     </button>
                   ))}
@@ -84,43 +97,30 @@ const Reservation = () => {
               </div>
             </div>
 
-            {/* Form Fields */}
             <div className="space-y-5">
               <div>
                 <label className="block text-sm font-medium text-foreground mb-1.5">{t('reservation.name')}</label>
-                <input
-                  type="text"
-                  required
-                  className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                />
+                <input type="text" required value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                  className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-foreground mb-1.5">{t('reservation.email')}</label>
-                <input
-                  type="email"
-                  required
-                  className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                />
+                <input type="email" required value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                  className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-foreground mb-1.5">{t('reservation.phone')}</label>
-                <input
-                  type="tel"
-                  className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                />
+                <input type="tel" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
+                  className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-foreground mb-1.5">{t('reservation.notes')}</label>
-                <textarea
-                  rows={4}
-                  className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
-                />
+                <textarea rows={4} value={form.notes} onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
+                  className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none" />
               </div>
-              <button
-                type="submit"
-                className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors"
-              >
-                {submitted ? t('reservation.success') : t('reservation.submit')}
+              <button type="submit" disabled={loading}
+                className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors disabled:opacity-50">
+                {loading ? '...' : t('reservation.submit')}
               </button>
             </div>
           </motion.form>
