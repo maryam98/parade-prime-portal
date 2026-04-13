@@ -39,7 +39,7 @@ const AdminSettings = () => {
       const err = results.find(r => r.error);
       if (err?.error) throw err.error;
     },
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ['site-settings'] }); toast.success('تنظیمات ذخیره شد'); },
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ['site-settings-admin'] }); qc.invalidateQueries({ queryKey: ['site-settings'] }); toast.success('تنظیمات ذخیره شد'); },
     onError: () => toast.error('خطا در ذخیره تنظیمات'),
   });
 
