@@ -35,9 +35,12 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+const ThemeApplier = () => { useThemeApplier(); return null; };
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
+      <ThemeApplier />
       <Toaster />
       <Sonner />
       <BrowserRouter>
