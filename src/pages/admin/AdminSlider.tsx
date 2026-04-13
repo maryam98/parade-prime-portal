@@ -55,8 +55,8 @@ const AdminSlider = () => {
         if (error) throw error;
       }
     },
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-slides'] }); setEditing(null); toast.success('Slide saved'); },
-    onError: () => toast.error('Failed to save slide'),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-slides'] }); setEditing(null); toast.success(t('admin.slideSaved')); },
+    onError: () => toast.error(t('admin.slideSaveFailed')),
   });
 
   const remove = useMutation({
@@ -64,7 +64,7 @@ const AdminSlider = () => {
       const { error } = await supabase.from('hero_slides').delete().eq('id', id);
       if (error) throw error;
     },
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-slides'] }); setDeleteId(null); toast.success('Slide deleted'); },
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-slides'] }); setDeleteId(null); toast.success(t('admin.slideDeleted')); },
   });
 
   const openEdit = (s: any) => {
@@ -78,10 +78,10 @@ const AdminSlider = () => {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-heading font-bold text-foreground">{t('admin.slider')}</h1>
-            <p className="text-sm text-muted-foreground mt-1">Manage hero slider content</p>
+            <p className="text-sm text-muted-foreground mt-1">{t('admin.manageSlider')}</p>
           </div>
           <Button onClick={() => { setForm(empty); setEditing('new'); }}>
-            <Plus className="h-4 w-4" /> Add Slide
+            <Plus className="h-4 w-4" /> {t('admin.addSlide')}
           </Button>
         </div>
 
@@ -90,9 +90,9 @@ const AdminSlider = () => {
         ) : slides.length === 0 ? (
           <div className="text-center py-20 border border-dashed border-border rounded-xl">
             <ImageIcon className="h-12 w-12 mx-auto text-muted-foreground/30 mb-3" />
-            <p className="text-muted-foreground">No slides yet</p>
+            <p className="text-muted-foreground">{t('admin.noSlides')}</p>
             <Button variant="outline" className="mt-4" onClick={() => { setForm(empty); setEditing('new'); }}>
-              <Plus className="h-4 w-4" /> Add your first slide
+              <Plus className="h-4 w-4" /> {t('admin.firstSlide')}
             </Button>
           </div>
         ) : (
@@ -123,27 +123,27 @@ const AdminSlider = () => {
 
         <Dialog open={!!editing} onOpenChange={(open) => !open && setEditing(null)}>
           <DialogContent className="max-w-lg">
-            <DialogHeader><DialogTitle>{editing === 'new' ? 'New Slide' : 'Edit Slide'}</DialogTitle></DialogHeader>
+            <DialogHeader><DialogTitle>{editing === 'new' ? t('admin.newSlide') : t('admin.editSlide')}</DialogTitle></DialogHeader>
             <div className="space-y-4 pt-2">
               <div className="grid grid-cols-2 gap-4">
-                <div><Label>Title</Label><Input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} className="mt-1.5" /></div>
-                <div><Label>Subtitle</Label><Input value={form.subtitle} onChange={e => setForm(f => ({ ...f, subtitle: e.target.value }))} className="mt-1.5" /></div>
+                <div><Label>{t('common.title')}</Label><Input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} className="mt-1.5" /></div>
+                <div><Label>{t('admin.subtitle')}</Label><Input value={form.subtitle} onChange={e => setForm(f => ({ ...f, subtitle: e.target.value }))} className="mt-1.5" /></div>
               </div>
-              <div><Label>Description</Label><Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} className="mt-1.5" /></div>
+              <div><Label>{t('common.description')}</Label><Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} className="mt-1.5" /></div>
               <div className="grid grid-cols-2 gap-4">
-                <div><Label>Button Text</Label><Input value={form.cta_text} onChange={e => setForm(f => ({ ...f, cta_text: e.target.value }))} className="mt-1.5" /></div>
-                <div><Label>Button Link</Label><Input value={form.cta_link} onChange={e => setForm(f => ({ ...f, cta_link: e.target.value }))} placeholder="/contact" className="mt-1.5" /></div>
+                <div><Label>{t('admin.buttonText')}</Label><Input value={form.cta_text} onChange={e => setForm(f => ({ ...f, cta_text: e.target.value }))} className="mt-1.5" /></div>
+                <div><Label>{t('admin.buttonLink')}</Label><Input value={form.cta_link} onChange={e => setForm(f => ({ ...f, cta_link: e.target.value }))} placeholder="/contact" className="mt-1.5" /></div>
               </div>
               <div>
-                <Label>Status</Label>
+                <Label>{t('common.status')}</Label>
                 <select value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))}
                   className="mt-1.5 w-full h-10 px-3 rounded-md border border-input bg-background text-sm">
-                  <option value="Active">Active</option><option value="Draft">Draft</option>
+                  <option value="Active">{t('common.active')}</option><option value="Draft">{t('common.draft')}</option>
                 </select>
               </div>
-              <div><Label>Image</Label><div className="mt-1.5"><ImageUpload value={form.image_url} onChange={url => setForm(f => ({ ...f, image_url: url }))} folder="slides" /></div></div>
+              <div><Label>{t('common.image')}</Label><div className="mt-1.5"><ImageUpload value={form.image_url} onChange={url => setForm(f => ({ ...f, image_url: url }))} folder="slides" /></div></div>
               <Button onClick={() => save.mutate()} disabled={save.isPending || !form.title.trim()} className="w-full">
-                {save.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />} Save
+                {save.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />} {t('common.save')}
               </Button>
             </div>
           </DialogContent>
@@ -152,12 +152,12 @@ const AdminSlider = () => {
         <AlertDialog open={!!deleteId} onOpenChange={(open) => !open && setDeleteId(null)}>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Delete Slide</AlertDialogTitle>
-              <AlertDialogDescription>Are you sure? This action cannot be undone.</AlertDialogDescription>
+              <AlertDialogTitle>{t('admin.deleteSlide')}</AlertDialogTitle>
+              <AlertDialogDescription>{t('admin.deleteConfirm')}</AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={() => deleteId && remove.mutate(deleteId)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">Delete</AlertDialogAction>
+              <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
+              <AlertDialogAction onClick={() => deleteId && remove.mutate(deleteId)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">{t('common.delete')}</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

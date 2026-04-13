@@ -42,7 +42,7 @@ const AdminMessages = () => {
       qc.invalidateQueries({ queryKey: ['contact_messages'] });
       qc.invalidateQueries({ queryKey: ['admin-unread-count'] });
       setDeleteId(null);
-      toast.success('Message deleted');
+      toast.success(t('admin.messageDeleted'));
     },
   });
 
@@ -55,7 +55,7 @@ const AdminMessages = () => {
           <div>
             <h1 className="text-2xl font-heading font-bold text-foreground">{t('admin.messages')}</h1>
             <p className="text-sm text-muted-foreground mt-1">
-              {messages.length} messages{unreadCount > 0 && ` · ${unreadCount} unread`}
+              {messages.length} {t('admin.messages').toLowerCase()}{unreadCount > 0 && ` · ${unreadCount} ${t('admin.unread')}`}
             </p>
           </div>
         </div>
@@ -65,7 +65,7 @@ const AdminMessages = () => {
         ) : messages.length === 0 ? (
           <div className="text-center py-20 border border-dashed border-border rounded-xl">
             <MessageSquare className="h-12 w-12 mx-auto text-muted-foreground/30 mb-3" />
-            <p className="text-muted-foreground">No messages yet</p>
+            <p className="text-muted-foreground">{t('admin.noMessages')}</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -92,7 +92,7 @@ const AdminMessages = () => {
                   <div className="flex items-center gap-1 shrink-0">
                     <span className="text-xs text-muted-foreground mr-2 hidden sm:block">{new Date(m.created_at).toLocaleDateString()}</span>
                     <Button variant="ghost" size="sm" onClick={() => toggleRead.mutate({ id: m.id, read: m.read })} className="text-xs">
-                      {m.read ? 'Mark unread' : 'Mark read'}
+                      {m.read ? t('admin.markUnread') : t('admin.markRead')}
                     </Button>
                     <Button variant="ghost" size="icon" onClick={() => setDeleteId(m.id)} className="text-muted-foreground hover:text-destructive h-8 w-8">
                       <Trash2 className="h-3.5 w-3.5" />
@@ -107,12 +107,12 @@ const AdminMessages = () => {
         <AlertDialog open={!!deleteId} onOpenChange={(open) => !open && setDeleteId(null)}>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Delete Message</AlertDialogTitle>
-              <AlertDialogDescription>Are you sure? This action cannot be undone.</AlertDialogDescription>
+              <AlertDialogTitle>{t('admin.deleteMessage')}</AlertDialogTitle>
+              <AlertDialogDescription>{t('admin.deleteConfirm')}</AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={() => deleteId && remove.mutate(deleteId)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">Delete</AlertDialogAction>
+              <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
+              <AlertDialogAction onClick={() => deleteId && remove.mutate(deleteId)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">{t('common.delete')}</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

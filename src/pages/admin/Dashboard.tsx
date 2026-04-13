@@ -49,19 +49,19 @@ const AdminDashboard = () => {
   });
 
   const stats = [
-    { label: t('admin.articles', 'Articles'), value: counts?.articles ?? '—', icon: FileText, trend: `${counts?.articles ?? 0} total` },
-    { label: t('admin.newMessages', 'Messages'), value: counts?.unreadMessages ?? '—', icon: MessageSquare, trend: `${counts?.messages ?? 0} total` },
-    { label: t('admin.reservations', 'Reservations'), value: counts?.reservations ?? '—', icon: CalendarDays, trend: 'All time' },
-    { label: t('admin.activeServices', 'Services'), value: counts?.services ?? '—', icon: Layers, trend: `${counts?.products ?? 0} products` },
+    { label: t('admin.articles'), value: counts?.articles ?? '—', icon: FileText, trend: `${counts?.articles ?? 0} ${t('admin.total')}` },
+    { label: t('admin.newMessages'), value: counts?.unreadMessages ?? '—', icon: MessageSquare, trend: `${counts?.messages ?? 0} ${t('admin.total')}` },
+    { label: t('admin.reservations'), value: counts?.reservations ?? '—', icon: CalendarDays, trend: t('admin.allTime') },
+    { label: t('admin.activeServices'), value: counts?.services ?? '—', icon: Layers, trend: `${counts?.products ?? 0} ${t('admin.products')}` },
   ];
 
   const timeAgo = (dateStr: string) => {
     const diff = Date.now() - new Date(dateStr).getTime();
     const mins = Math.floor(diff / 60000);
-    if (mins < 60) return `${mins}m ago`;
+    if (mins < 60) return `${mins}m`;
     const hrs = Math.floor(mins / 60);
-    if (hrs < 24) return `${hrs}h ago`;
-    return `${Math.floor(hrs / 24)}d ago`;
+    if (hrs < 24) return `${hrs}h`;
+    return `${Math.floor(hrs / 24)}d`;
   };
 
   return (
@@ -89,7 +89,7 @@ const AdminDashboard = () => {
         <div className="rounded-xl border border-border bg-card p-5">
           <h2 className="text-lg font-heading font-semibold text-card-foreground mb-4">{t('admin.messages')}</h2>
           {recentMessages.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No messages yet.</p>
+            <p className="text-sm text-muted-foreground">{t('admin.noMessages')}</p>
           ) : (
             <div className="space-y-3">
               {recentMessages.map((m) => (
@@ -112,16 +112,16 @@ const AdminDashboard = () => {
         <div className="rounded-xl border border-border bg-card p-5">
           <h2 className="text-lg font-heading font-semibold text-card-foreground mb-4">{t('admin.reservations')}</h2>
           {recentReservations.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No reservations yet.</p>
+            <p className="text-sm text-muted-foreground">{t('admin.noReservations')}</p>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border">
-                    <th className="text-left py-2 text-muted-foreground font-medium">Name</th>
-                    <th className="text-left py-2 text-muted-foreground font-medium">Date</th>
-                    <th className="text-left py-2 text-muted-foreground font-medium">Time</th>
-                    <th className="text-left py-2 text-muted-foreground font-medium">Status</th>
+                    <th className="text-left py-2 text-muted-foreground font-medium">{t('common.name')}</th>
+                    <th className="text-left py-2 text-muted-foreground font-medium">{t('common.date')}</th>
+                    <th className="text-left py-2 text-muted-foreground font-medium">{t('common.time')}</th>
+                    <th className="text-left py-2 text-muted-foreground font-medium">{t('common.status')}</th>
                   </tr>
                 </thead>
                 <tbody>

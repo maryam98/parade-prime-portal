@@ -42,19 +42,19 @@ const AdminSettings = () => {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['site-settings-admin'] });
       qc.invalidateQueries({ queryKey: ['site-settings'] });
-      toast.success('تنظیمات ذخیره شد');
+      toast.success(t('admin.settingsSaved'));
     },
-    onError: () => toast.error('خطا در ذخیره تنظیمات'),
+    onError: () => toast.error(t('admin.settingsSaveFailed')),
   });
 
   const uploadFile = async (file: File, key: string) => {
     const ext = file.name.split('.').pop();
     const fileName = `${key}-${Date.now()}.${ext}`;
     const { data, error } = await supabase.storage.from('media').upload(`settings/${fileName}`, file, { upsert: true });
-    if (error) { toast.error('خطا در آپلود'); return; }
+    if (error) { toast.error(t('admin.uploadFailed')); return; }
     const { data: urlData } = supabase.storage.from('media').getPublicUrl(data.path);
     setForm(f => ({ ...f, [key]: urlData.publicUrl }));
-    toast.success('فایل آپلود شد');
+    toast.success(t('admin.fileUploaded'));
   };
 
   const handleImageUpload = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,7 +66,7 @@ const AdminSettings = () => {
     return (
       <AdminLayout>
         <div className="p-6">
-          <p className="text-destructive">خطا در بارگذاری تنظیمات: {(error as Error).message}</p>
+          <p className="text-destructive">{t('admin.settingsLoadFailed')}: {(error as Error).message}</p>
         </div>
       </AdminLayout>
     );
@@ -79,42 +79,42 @@ const AdminSettings = () => {
           <h1 className="text-2xl font-heading font-bold text-foreground">{t('admin.settings')}</h1>
           <button onClick={() => save.mutate()} disabled={save.isPending}
             className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50">
-            <Save className="h-4 w-4" /> {save.isPending ? 'در حال ذخیره...' : 'ذخیره تنظیمات'}
+            <Save className="h-4 w-4" /> {save.isPending ? t('common.saving') : t('admin.saveSettings')}
           </button>
         </div>
 
         {isLoading ? (
           <div className="flex items-center gap-2 text-muted-foreground">
             <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-            <span>در حال بارگذاری...</span>
+            <span>{t('common.loading')}</span>
           </div>
         ) : (
           <Tabs defaultValue="general" className="max-w-3xl">
             <TabsList className="mb-6 flex-wrap h-auto gap-1 p-1">
-              <TabsTrigger value="general" className="gap-1.5"><Globe className="h-4 w-4" /> عمومی</TabsTrigger>
-              <TabsTrigger value="branding" className="gap-1.5"><ImageIcon className="h-4 w-4" /> برندینگ</TabsTrigger>
-              <TabsTrigger value="theme" className="gap-1.5"><Palette className="h-4 w-4" /> تم و رنگ</TabsTrigger>
-              <TabsTrigger value="fonts" className="gap-1.5"><Type className="h-4 w-4" /> فونت‌ها</TabsTrigger>
-              <TabsTrigger value="social" className="gap-1.5"><Share2 className="h-4 w-4" /> شبکه‌های اجتماعی</TabsTrigger>
-              <TabsTrigger value="gdpr" className="gap-1.5"><Cookie className="h-4 w-4" /> GDPR</TabsTrigger>
-              <TabsTrigger value="security" className="gap-1.5"><Shield className="h-4 w-4" /> امنیت</TabsTrigger>
+              <TabsTrigger value="general" className="gap-1.5"><Globe className="h-4 w-4" /> {t('admin.settingsGeneral')}</TabsTrigger>
+              <TabsTrigger value="branding" className="gap-1.5"><ImageIcon className="h-4 w-4" /> {t('admin.settingsBranding')}</TabsTrigger>
+              <TabsTrigger value="theme" className="gap-1.5"><Palette className="h-4 w-4" /> {t('admin.settingsTheme')}</TabsTrigger>
+              <TabsTrigger value="fonts" className="gap-1.5"><Type className="h-4 w-4" /> {t('admin.settingsFonts')}</TabsTrigger>
+              <TabsTrigger value="social" className="gap-1.5"><Share2 className="h-4 w-4" /> {t('admin.settingsSocial')}</TabsTrigger>
+              <TabsTrigger value="gdpr" className="gap-1.5"><Cookie className="h-4 w-4" /> {t('admin.settingsGdpr')}</TabsTrigger>
+              <TabsTrigger value="security" className="gap-1.5"><Shield className="h-4 w-4" /> {t('admin.settingsSecurity')}</TabsTrigger>
             </TabsList>
 
             {/* General */}
             <TabsContent value="general">
               <div className="p-6 rounded-xl border border-border bg-card space-y-4">
-                <h2 className="font-heading font-semibold text-card-foreground">اطلاعات عمومی</h2>
-                <SettingTextField form={form} setForm={setForm} settingKey="site_name" label="نام سایت" placeholder="Paradaim" />
-                <SettingTextField form={form} setForm={setForm} settingKey="site_tagline" label="شعار سایت" placeholder="شعار کوتاه سایت شما" />
-                <SettingTextField form={form} setForm={setForm} settingKey="footer_text" label="متن فوتر" placeholder="© 2024 Paradaim" />
-                <SettingTextField form={form} setForm={setForm} settingKey="contact_email" label="ایمیل تماس" type="email" />
-                <SettingTextField form={form} setForm={setForm} settingKey="contact_phone" label="تلفن تماس" type="tel" />
-                <SettingTextField form={form} setForm={setForm} settingKey="address" label="آدرس" />
+                <h2 className="font-heading font-semibold text-card-foreground">{t('admin.settingsGeneral')}</h2>
+                <SettingTextField form={form} setForm={setForm} settingKey="site_name" label={t('admin.siteName')} placeholder="Paradaim" />
+                <SettingTextField form={form} setForm={setForm} settingKey="site_tagline" label={t('admin.siteTagline')} />
+                <SettingTextField form={form} setForm={setForm} settingKey="footer_text" label={t('admin.footerText')} placeholder="© 2024 Paradaim" />
+                <SettingTextField form={form} setForm={setForm} settingKey="contact_email" label={t('admin.contactEmail')} type="email" />
+                <SettingTextField form={form} setForm={setForm} settingKey="contact_phone" label={t('admin.contactPhone')} type="tel" />
+                <SettingTextField form={form} setForm={setForm} settingKey="address" label={t('admin.addressLabel')} />
               </div>
 
               <div className="p-6 rounded-xl border border-border bg-card space-y-4 mt-6">
                 <h2 className="font-heading font-semibold text-card-foreground flex items-center gap-2">
-                  <Share2 className="h-5 w-5" /> Follow Us
+                  <Share2 className="h-5 w-5" /> {t('admin.followUs')}
                 </h2>
                 <SettingTextField form={form} setForm={setForm} settingKey="social_linkedin" label="LinkedIn" type="url" placeholder="https://linkedin.com/..." />
                 <SettingTextField form={form} setForm={setForm} settingKey="social_github" label="GitHub" type="url" placeholder="https://github.com/..." />
@@ -126,10 +126,10 @@ const AdminSettings = () => {
             {/* Branding */}
             <TabsContent value="branding">
               <div className="p-6 rounded-xl border border-border bg-card space-y-6">
-                <h2 className="font-heading font-semibold text-card-foreground">لوگو و آیکون</h2>
+                <h2 className="font-heading font-semibold text-card-foreground">{t('admin.logoAndIcon')}</h2>
                 <div className="space-y-2">
-                  <label className="block text-sm font-medium text-foreground">لوگوی سایت</label>
-                  <p className="text-xs text-muted-foreground">لوگو در هدر و فوتر نمایش داده می‌شود (PNG یا SVG پیشنهاد می‌شود)</p>
+                  <label className="block text-sm font-medium text-foreground">{t('admin.siteLogo')}</label>
+                  <p className="text-xs text-muted-foreground">{t('admin.siteLogoDesc')}</p>
                   <div className="flex items-center gap-4">
                     {form.site_logo ? (
                       <div className="relative group">
@@ -147,14 +147,14 @@ const AdminSettings = () => {
                     <input type="file" accept="image/*" className="hidden" ref={logoInputRef} onChange={handleImageUpload('site_logo')} />
                     <button onClick={() => logoInputRef.current?.click()}
                       className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border text-sm hover:bg-muted transition-colors">
-                      <Upload className="h-4 w-4" /> آپلود
+                      <Upload className="h-4 w-4" /> {t('common.upload')}
                     </button>
                   </div>
                 </div>
                 <div className="border-t border-border pt-6">
                   <div className="space-y-2">
-                    <label className="block text-sm font-medium text-foreground">Favicon</label>
-                    <p className="text-xs text-muted-foreground">آیکون کوچک مرورگر — سایز پیشنهادی ۳۲×۳۲ یا ۶۴×۶۴ پیکسل</p>
+                    <label className="block text-sm font-medium text-foreground">{t('admin.favicon')}</label>
+                    <p className="text-xs text-muted-foreground">{t('admin.faviconDesc')}</p>
                     <div className="flex items-center gap-4">
                       {form.site_favicon ? (
                         <div className="relative group">
@@ -172,7 +172,7 @@ const AdminSettings = () => {
                       <input type="file" accept="image/*" className="hidden" ref={faviconInputRef} onChange={handleImageUpload('site_favicon')} />
                       <button onClick={() => faviconInputRef.current?.click()}
                         className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border text-sm hover:bg-muted transition-colors">
-                        <Upload className="h-4 w-4" /> آپلود
+                        <Upload className="h-4 w-4" /> {t('common.upload')}
                       </button>
                     </div>
                   </div>
@@ -183,14 +183,12 @@ const AdminSettings = () => {
             {/* Theme */}
             <TabsContent value="theme">
               <div className="p-6 rounded-xl border border-border bg-card space-y-5">
-                <h2 className="font-heading font-semibold text-card-foreground">رنگ‌های تم</h2>
-                <SettingColorField form={form} setForm={setForm} settingKey="theme_primary_color" label="رنگ اصلی (Primary)" />
-                <SettingColorField form={form} setForm={setForm} settingKey="theme_bg_color" label="رنگ پس‌زمینه" />
-                <SettingColorField form={form} setForm={setForm} settingKey="theme_text_color" label="رنگ متن" />
+                <h2 className="font-heading font-semibold text-card-foreground">{t('admin.themeColors')}</h2>
+                <SettingColorField form={form} setForm={setForm} settingKey="theme_primary_color" label={t('admin.primaryColor')} />
+                <SettingColorField form={form} setForm={setForm} settingKey="theme_bg_color" label={t('admin.bgColor')} />
+                <SettingColorField form={form} setForm={setForm} settingKey="theme_text_color" label={t('admin.textColor')} />
                 <div className="p-4 rounded-lg bg-muted/50 border border-border">
-                  <p className="text-xs text-muted-foreground">
-                    💡 پس از ذخیره تنظیمات، رنگ‌ها در بارگذاری بعدی صفحه اعمال می‌شوند.
-                  </p>
+                  <p className="text-xs text-muted-foreground">{t('admin.themeHint')}</p>
                 </div>
               </div>
             </TabsContent>
@@ -198,13 +196,11 @@ const AdminSettings = () => {
             {/* Fonts */}
             <TabsContent value="fonts">
               <div className="p-6 rounded-xl border border-border bg-card space-y-4">
-                <h2 className="font-heading font-semibold text-card-foreground">فونت‌ها</h2>
-                <SettingTextField form={form} setForm={setForm} settingKey="theme_heading_font" label="فونت عناوین" placeholder="Space Grotesk" />
-                <SettingTextField form={form} setForm={setForm} settingKey="theme_body_font" label="فونت متن" placeholder="DM Sans" />
+                <h2 className="font-heading font-semibold text-card-foreground">{t('admin.settingsFonts')}</h2>
+                <SettingTextField form={form} setForm={setForm} settingKey="theme_heading_font" label={t('admin.headingFont')} placeholder="Space Grotesk" />
+                <SettingTextField form={form} setForm={setForm} settingKey="theme_body_font" label={t('admin.bodyFont')} placeholder="DM Sans" />
                 <div className="p-4 rounded-lg bg-muted/50 border border-border">
-                  <p className="text-xs text-muted-foreground">
-                    💡 از فونت‌های Google Fonts استفاده کنید. نام فونت باید دقیقاً مطابق Google Fonts باشد.
-                  </p>
+                  <p className="text-xs text-muted-foreground">{t('admin.fontHint')}</p>
                 </div>
               </div>
             </TabsContent>
@@ -212,7 +208,7 @@ const AdminSettings = () => {
             {/* Social */}
             <TabsContent value="social">
               <div className="p-6 rounded-xl border border-border bg-card space-y-4">
-                <h2 className="font-heading font-semibold text-card-foreground">شبکه‌های اجتماعی</h2>
+                <h2 className="font-heading font-semibold text-card-foreground">{t('admin.settingsSocial')}</h2>
                 <SettingTextField form={form} setForm={setForm} settingKey="social_linkedin" label="LinkedIn" type="url" placeholder="https://linkedin.com/..." />
                 <SettingTextField form={form} setForm={setForm} settingKey="social_twitter" label="Twitter / X" type="url" placeholder="https://x.com/..." />
                 <SettingTextField form={form} setForm={setForm} settingKey="social_instagram" label="Instagram" type="url" placeholder="https://instagram.com/..." />
@@ -222,14 +218,12 @@ const AdminSettings = () => {
             {/* GDPR */}
             <TabsContent value="gdpr">
               <div className="p-6 rounded-xl border border-border bg-card space-y-4">
-                <h2 className="font-heading font-semibold text-card-foreground">تنظیمات GDPR / کوکی</h2>
-                <SettingTextField form={form} setForm={setForm} settingKey="gdpr_consent_text" label="متن رضایت (فارسی)" placeholder="ما از کوکی‌ها استفاده می‌کنیم..." />
-                <SettingTextField form={form} setForm={setForm} settingKey="gdpr_consent_text_en" label="متن رضایت (English)" placeholder="We use cookies..." />
-                <SettingTextField form={form} setForm={setForm} settingKey="gdpr_consent_text_de" label="متن رضایت (Deutsch)" placeholder="Wir verwenden Cookies..." />
+                <h2 className="font-heading font-semibold text-card-foreground">{t('admin.gdprSettings')}</h2>
+                <SettingTextField form={form} setForm={setForm} settingKey="gdpr_consent_text" label={t('admin.gdprTextFa')} />
+                <SettingTextField form={form} setForm={setForm} settingKey="gdpr_consent_text_en" label={t('admin.gdprTextEn')} />
+                <SettingTextField form={form} setForm={setForm} settingKey="gdpr_consent_text_de" label={t('admin.gdprTextDe')} />
                 <div className="p-4 rounded-lg bg-muted/50 border border-border">
-                  <p className="text-xs text-muted-foreground">
-                    💡 این متن در بنر کوکی پایین صفحه نمایش داده می‌شود. اگر خالی باشد، بنر نمایش داده نمی‌شود.
-                  </p>
+                  <p className="text-xs text-muted-foreground">{t('admin.gdprHint')}</p>
                 </div>
               </div>
             </TabsContent>
@@ -237,16 +231,16 @@ const AdminSettings = () => {
             {/* Security */}
             <TabsContent value="security">
               <div className="p-6 rounded-xl border border-border bg-card space-y-4">
-                <h2 className="font-heading font-semibold text-card-foreground">تنظیمات امنیتی</h2>
-                <SettingTextField form={form} setForm={setForm} settingKey="hcaptcha_site_key" label="Cloudflare Turnstile Site Key" placeholder="0x4AAAAAAA..." />
+                <h2 className="font-heading font-semibold text-card-foreground">{t('admin.securitySettings')}</h2>
+                <SettingTextField form={form} setForm={setForm} settingKey="hcaptcha_site_key" label={t('admin.turnstileKey')} placeholder="0x4AAAAAAA..." />
                 <div className="p-4 rounded-lg bg-muted/50 border border-border">
                   <p className="text-xs text-muted-foreground">
-                    💡 برای فعال‌سازی کپچا در فرم‌های ورود و ثبت‌نام، از <a href="https://dash.cloudflare.com/" target="_blank" rel="noopener" className="text-primary underline">Cloudflare Dashboard</a> → Turnstile → Add Site، یک Site Key بگیرید. <strong>کاملاً رایگان!</strong>
+                    {t('admin.turnstileHint')} <a href="https://dash.cloudflare.com/" target="_blank" rel="noopener" className="text-primary underline">Cloudflare Dashboard</a> → Turnstile → Add Site. <strong>{t('admin.turnstileFree')}</strong>
                   </p>
                 </div>
                 <div className="border-t border-border pt-4">
                   <a href="/admin/blocked-ips" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-border text-sm hover:bg-muted transition-colors">
-                    <Shield className="h-4 w-4" /> مدیریت IP بلاک
+                    <Shield className="h-4 w-4" /> {t('admin.manageBlockedIpsLink')}
                   </a>
                 </div>
               </div>
@@ -258,7 +252,6 @@ const AdminSettings = () => {
   );
 };
 
-// Extracted as standalone components to avoid inline component definitions
 const SettingTextField = ({ form, setForm, settingKey, label, type = 'text', placeholder = '' }: {
   form: Record<string, string>;
   setForm: React.Dispatch<React.SetStateAction<Record<string, string>>>;
