@@ -16,6 +16,7 @@ const Footer = () => {
 
   const socials = [
     { label: 'LinkedIn', url: settings.social_linkedin },
+    { label: 'GitHub', url: settings.social_github },
     { label: 'Twitter', url: settings.social_twitter },
     { label: 'Instagram', url: settings.social_instagram },
   ].filter(s => s.url);
