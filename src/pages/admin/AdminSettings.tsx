@@ -15,7 +15,7 @@ const AdminSettings = () => {
   const faviconInputRef = useRef<HTMLInputElement>(null);
 
   const { data: settings = [], isLoading } = useQuery({
-    queryKey: ['site-settings'],
+    queryKey: ['site-settings-admin'],
     queryFn: async () => {
       const { data, error } = await supabase.from('site_settings').select('*');
       if (error) throw error;
