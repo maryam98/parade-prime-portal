@@ -1,11 +1,19 @@
 import { useTranslation } from 'react-i18next';
 import AdminLayout from '@/components/AdminLayout';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, Users as UsersIcon } from 'lucide-react';
+import { Loader2, Users as UsersIcon, ShieldCheck, ShieldOff, Trash2 } from 'lucide-react';
+import { toast } from '@/components/ui/sonner';
+import { useAuth } from '@/contexts/AuthContext';
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 const AdminUsers = () => {
   const { t } = useTranslation();
+  const { user: currentUser } = useAuth();
+  const qc = useQueryClient();
 
   const { data: users = [], isLoading } = useQuery({
     queryKey: ['admin-users'],
@@ -26,6 +34,25 @@ const AdminUsers = () => {
       }));
     },
   });
+
+  const toggleAdmin = useMutation({
+    mutationFn: async ({ userId, makeAdmin }: { userId: string; makeAdmin: boolean }) => {
+      if (makeAdmin) {
+        const { error } = await supabase.from('user_roles').insert({ user_id: userId, role: 'admin' });
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from('user_roles').delete().eq('user_id', userId).eq('role', 'admin');
+        if (error) throw error;
+      }
+    },
+    onSuccess: (_, { makeAdmin }) => {
+      qc.invalidateQueries({ queryKey: ['admin-users'] });
+      toast.success(makeAdmin ? 'کاربر ادمین شد' : 'دسترسی ادمین حذف شد');
+    },
+    onError: () => toast.error('خطا در تغییر نقش'),
+  });
+
+  const isSelf = (userId: string) => currentUser?.id === userId;
 
   return (
     <AdminLayout>
@@ -53,6 +80,7 @@ const AdminUsers = () => {
                   <th className="text-left px-5 py-3 text-muted-foreground font-medium">Phone</th>
                   <th className="text-left px-5 py-3 text-muted-foreground font-medium">Role</th>
                   <th className="text-left px-5 py-3 text-muted-foreground font-medium">Joined</th>
+                  <th className="text-left px-5 py-3 text-muted-foreground font-medium">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -81,6 +109,47 @@ const AdminUsers = () => {
                       </div>
                     </td>
                     <td className="px-5 py-3 text-muted-foreground">{new Date(u.created_at).toLocaleDateString()}</td>
+                    <td className="px-5 py-3">
+                      {!isSelf(u.user_id) && (
+                        <div className="flex gap-2">
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <button
+                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                                  u.isAdmin
+                                    ? 'bg-destructive/10 text-destructive hover:bg-destructive/20'
+                                    : 'bg-primary/10 text-primary hover:bg-primary/20'
+                                }`}
+                              >
+                                {u.isAdmin ? <ShieldOff className="h-3.5 w-3.5" /> : <ShieldCheck className="h-3.5 w-3.5" />}
+                                {u.isAdmin ? 'حذف ادمین' : 'ادمین کردن'}
+                              </button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                  {u.isAdmin ? 'حذف دسترسی ادمین' : 'اعطای دسترسی ادمین'}
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  {u.isAdmin
+                                    ? `آیا مطمئنید که می‌خواهید دسترسی ادمین ${u.display_name || 'این کاربر'} را حذف کنید؟`
+                                    : `آیا مطمئنید که می‌خواهید ${u.display_name || 'این کاربر'} را ادمین کنید؟`
+                                  }
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>انصراف</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => toggleAdmin.mutate({ userId: u.user_id, makeAdmin: !u.isAdmin })}
+                                >
+                                  تأیید
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </div>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>
