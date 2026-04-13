@@ -109,6 +109,16 @@ const AdminSettings = () => {
                 <SettingTextField form={form} setForm={setForm} settingKey="contact_phone" label="تلفن تماس" type="tel" />
                 <SettingTextField form={form} setForm={setForm} settingKey="address" label="آدرس" />
               </div>
+
+              <div className="p-6 rounded-xl border border-border bg-card space-y-4 mt-6">
+                <h2 className="font-heading font-semibold text-card-foreground flex items-center gap-2">
+                  <Share2 className="h-5 w-5" /> Follow Us
+                </h2>
+                <SettingTextField form={form} setForm={setForm} settingKey="social_linkedin" label="LinkedIn" type="url" placeholder="https://linkedin.com/..." />
+                <SettingTextField form={form} setForm={setForm} settingKey="social_github" label="GitHub" type="url" placeholder="https://github.com/..." />
+                <SettingTextField form={form} setForm={setForm} settingKey="social_twitter" label="Twitter / X" type="url" placeholder="https://x.com/..." />
+                <SettingTextField form={form} setForm={setForm} settingKey="social_instagram" label="Instagram" type="url" placeholder="https://instagram.com/..." />
+              </div>
             </TabsContent>
 
             {/* Branding */}
