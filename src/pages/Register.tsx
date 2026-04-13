@@ -1,10 +1,12 @@
 import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { lovable } from '@/integrations/lovable';
+import { useSiteSettings } from '@/hooks/useSiteSettings';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 
 const Register = () => {
   const { t, i18n } = useTranslation();
@@ -15,7 +17,11 @@ const Register = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState('');
+  const captchaRef = useRef<HCaptcha>(null);
   const { signUp } = useAuth();
+  const settings = useSiteSettings();
+  const hcaptchaSiteKey = settings.hcaptcha_site_key;
 
   const labels = {
     orContinueWith: isRtl ? 'یا ثبت‌نام با' : i18n.language === 'de' ? 'Oder registrieren mit' : 'Or sign up with',
@@ -25,11 +31,17 @@ const Register = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (hcaptchaSiteKey && !captchaToken) {
+      setError(isRtl ? 'لطفاً کپچا را تکمیل کنید' : 'Please complete the captcha');
+      return;
+    }
     setError('');
     setLoading(true);
     const { error } = await signUp(email, password, displayName);
     if (error) {
       setError(error.message);
+      captchaRef.current?.resetCaptcha();
+      setCaptchaToken('');
     } else {
       setSuccess(true);
     }
@@ -88,6 +100,11 @@ const Register = () => {
             <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6}
               className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
           </div>
+          {hcaptchaSiteKey && (
+            <div className="flex justify-center">
+              <HCaptcha sitekey={hcaptchaSiteKey} onVerify={setCaptchaToken} ref={captchaRef} />
+            </div>
+          )}
           <button type="submit" disabled={loading}
             className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors disabled:opacity-50">
             {loading ? t('common.loading') : t('auth.register')}
