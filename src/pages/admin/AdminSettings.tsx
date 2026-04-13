@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useState, useEffect, useRef } from 'react';
 import { toast } from '@/components/ui/sonner';
-import { Save, Upload, X, Palette, Type, Globe, Share2, ImageIcon } from 'lucide-react';
+import { Save, Upload, X, Palette, Type, Globe, Share2, ImageIcon, Shield, Cookie } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const AdminSettings = () => {
@@ -96,6 +96,8 @@ const AdminSettings = () => {
               <TabsTrigger value="theme" className="gap-1.5"><Palette className="h-4 w-4" /> تم و رنگ</TabsTrigger>
               <TabsTrigger value="fonts" className="gap-1.5"><Type className="h-4 w-4" /> فونت‌ها</TabsTrigger>
               <TabsTrigger value="social" className="gap-1.5"><Share2 className="h-4 w-4" /> شبکه‌های اجتماعی</TabsTrigger>
+              <TabsTrigger value="gdpr" className="gap-1.5"><Cookie className="h-4 w-4" /> GDPR</TabsTrigger>
+              <TabsTrigger value="security" className="gap-1.5"><Shield className="h-4 w-4" /> امنیت</TabsTrigger>
             </TabsList>
 
             {/* General */}
