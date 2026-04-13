@@ -32,9 +32,9 @@ const AdminReservations = () => {
     },
     onSuccess: (_, { status }) => {
       qc.invalidateQueries({ queryKey: ['reservations'] });
-      toast.success(`Reservation ${status.toLowerCase()}`);
+      toast.success(t('admin.reservationStatusUpdated', { status: status.toLowerCase() }));
     },
-    onError: () => toast.error('Failed to update status'),
+    onError: () => toast.error(t('admin.reservationStatusFailed')),
   });
 
   const remove = useMutation({
@@ -42,7 +42,7 @@ const AdminReservations = () => {
       const { error } = await supabase.from('reservations').delete().eq('id', id);
       if (error) throw error;
     },
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ['reservations'] }); setDeleteId(null); toast.success('Reservation deleted'); },
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ['reservations'] }); setDeleteId(null); toast.success(t('admin.reservationDeleted')); },
   });
 
   const filtered = statusFilter ? reservations.filter(r => r.status === statusFilter) : reservations;
@@ -63,16 +63,16 @@ const AdminReservations = () => {
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-heading font-bold text-foreground">{t('admin.reservations')}</h1>
-          <p className="text-sm text-muted-foreground mt-1">Manage customer reservations</p>
+          <p className="text-sm text-muted-foreground mt-1">{t('admin.manageReservations')}</p>
         </div>
 
         {/* Status filter tabs */}
         <div className="flex gap-2">
           {[
-            { key: '', label: 'All', count: counts.all },
-            { key: 'Pending', label: 'Pending', count: counts.Pending },
-            { key: 'Confirmed', label: 'Confirmed', count: counts.Confirmed },
-            { key: 'Cancelled', label: 'Cancelled', count: counts.Cancelled },
+            { key: '', label: t('common.all'), count: counts.all },
+            { key: 'Pending', label: t('common.pending'), count: counts.Pending },
+            { key: 'Confirmed', label: t('common.confirmed'), count: counts.Confirmed },
+            { key: 'Cancelled', label: t('common.cancelled'), count: counts.Cancelled },
           ].map(tab => (
             <button key={tab.key} onClick={() => setStatusFilter(tab.key)}
               className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${statusFilter === tab.key ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:text-foreground'}`}>
@@ -86,17 +86,17 @@ const AdminReservations = () => {
         ) : filtered.length === 0 ? (
           <div className="text-center py-20 border border-dashed border-border rounded-xl">
             <CalendarDays className="h-12 w-12 mx-auto text-muted-foreground/30 mb-3" />
-            <p className="text-muted-foreground">No reservations found</p>
+            <p className="text-muted-foreground">{t('admin.noReservations')}</p>
           </div>
         ) : (
           <div className="rounded-xl border border-border bg-card overflow-hidden">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border bg-muted/50">
-                  <th className="text-left px-5 py-3 text-muted-foreground font-medium">Customer</th>
-                  <th className="text-left px-5 py-3 text-muted-foreground font-medium">Date & Time</th>
-                  <th className="text-left px-5 py-3 text-muted-foreground font-medium">Status</th>
-                  <th className="text-right px-5 py-3 text-muted-foreground font-medium">Actions</th>
+                  <th className="text-left px-5 py-3 text-muted-foreground font-medium">{t('admin.customer')}</th>
+                  <th className="text-left px-5 py-3 text-muted-foreground font-medium">{t('admin.dateTime')}</th>
+                  <th className="text-left px-5 py-3 text-muted-foreground font-medium">{t('common.status')}</th>
+                  <th className="text-right px-5 py-3 text-muted-foreground font-medium">{t('common.actions')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -113,19 +113,19 @@ const AdminReservations = () => {
                     <td className="px-5 py-3">{statusBadge(r.status)}</td>
                     <td className="px-5 py-3 text-right">
                       <div className="flex items-center justify-end gap-1">
-                        <Button variant="ghost" size="icon" onClick={() => setViewItem(r)} title="View details"><Eye className="h-4 w-4" /></Button>
+                        <Button variant="ghost" size="icon" onClick={() => setViewItem(r)}><Eye className="h-4 w-4" /></Button>
                         {r.status === 'Pending' && (
                           <>
-                            <Button variant="ghost" size="icon" onClick={() => updateStatus.mutate({ id: r.id, status: 'Confirmed' })} className="text-green-600 hover:text-green-700" title="Confirm">
+                            <Button variant="ghost" size="icon" onClick={() => updateStatus.mutate({ id: r.id, status: 'Confirmed' })} className="text-green-600 hover:text-green-700">
                               <CheckCircle2 className="h-4 w-4" />
                             </Button>
-                            <Button variant="ghost" size="icon" onClick={() => updateStatus.mutate({ id: r.id, status: 'Cancelled' })} className="text-muted-foreground hover:text-destructive" title="Cancel">
+                            <Button variant="ghost" size="icon" onClick={() => updateStatus.mutate({ id: r.id, status: 'Cancelled' })} className="text-muted-foreground hover:text-destructive">
                               <XCircle className="h-4 w-4" />
                             </Button>
                           </>
                         )}
                         {r.status !== 'Pending' && (
-                          <Button variant="ghost" size="icon" onClick={() => updateStatus.mutate({ id: r.id, status: 'Pending' })} className="text-muted-foreground hover:text-yellow-600" title="Reset to pending">
+                          <Button variant="ghost" size="icon" onClick={() => updateStatus.mutate({ id: r.id, status: 'Pending' })} className="text-muted-foreground hover:text-yellow-600">
                             <Clock className="h-4 w-4" />
                           </Button>
                         )}
@@ -139,24 +139,23 @@ const AdminReservations = () => {
           </div>
         )}
 
-        {/* Detail dialog */}
         <Dialog open={!!viewItem} onOpenChange={(open) => !open && setViewItem(null)}>
           <DialogContent>
-            <DialogHeader><DialogTitle>Reservation Details</DialogTitle></DialogHeader>
+            <DialogHeader><DialogTitle>{t('admin.reservationDetails')}</DialogTitle></DialogHeader>
             {viewItem && (
               <div className="space-y-4 pt-2">
                 <div className="grid grid-cols-2 gap-4">
-                  <div><span className="text-xs text-muted-foreground block">Name</span><span className="font-medium text-foreground">{viewItem.name}</span></div>
-                  <div><span className="text-xs text-muted-foreground block">Email</span><span className="text-foreground">{viewItem.email}</span></div>
-                  <div><span className="text-xs text-muted-foreground block">Phone</span><span className="text-foreground">{viewItem.phone || '—'}</span></div>
-                  <div><span className="text-xs text-muted-foreground block">Status</span>{statusBadge(viewItem.status)}</div>
-                  <div><span className="text-xs text-muted-foreground block">Date</span><span className="text-foreground">{viewItem.reservation_date}</span></div>
-                  <div><span className="text-xs text-muted-foreground block">Time</span><span className="text-foreground">{viewItem.reservation_time}</span></div>
+                  <div><span className="text-xs text-muted-foreground block">{t('common.name')}</span><span className="font-medium text-foreground">{viewItem.name}</span></div>
+                  <div><span className="text-xs text-muted-foreground block">{t('common.email')}</span><span className="text-foreground">{viewItem.email}</span></div>
+                  <div><span className="text-xs text-muted-foreground block">{t('common.phone')}</span><span className="text-foreground">{viewItem.phone || '—'}</span></div>
+                  <div><span className="text-xs text-muted-foreground block">{t('common.status')}</span>{statusBadge(viewItem.status)}</div>
+                  <div><span className="text-xs text-muted-foreground block">{t('common.date')}</span><span className="text-foreground">{viewItem.reservation_date}</span></div>
+                  <div><span className="text-xs text-muted-foreground block">{t('common.time')}</span><span className="text-foreground">{viewItem.reservation_time}</span></div>
                 </div>
                 {viewItem.notes && (
-                  <div><span className="text-xs text-muted-foreground block mb-1">Notes</span><p className="text-sm text-foreground bg-muted/50 rounded-lg p-3">{viewItem.notes}</p></div>
+                  <div><span className="text-xs text-muted-foreground block mb-1">{t('common.notes')}</span><p className="text-sm text-foreground bg-muted/50 rounded-lg p-3">{viewItem.notes}</p></div>
                 )}
-                <div className="text-xs text-muted-foreground">Created: {new Date(viewItem.created_at).toLocaleString()}</div>
+                <div className="text-xs text-muted-foreground">{t('admin.created')}: {new Date(viewItem.created_at).toLocaleString()}</div>
               </div>
             )}
           </DialogContent>
@@ -165,12 +164,12 @@ const AdminReservations = () => {
         <AlertDialog open={!!deleteId} onOpenChange={(open) => !open && setDeleteId(null)}>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Delete Reservation</AlertDialogTitle>
-              <AlertDialogDescription>Are you sure? This action cannot be undone.</AlertDialogDescription>
+              <AlertDialogTitle>{t('admin.deleteReservation')}</AlertDialogTitle>
+              <AlertDialogDescription>{t('admin.deleteConfirm')}</AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={() => deleteId && remove.mutate(deleteId)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">Delete</AlertDialogAction>
+              <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
+              <AlertDialogAction onClick={() => deleteId && remove.mutate(deleteId)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">{t('common.delete')}</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

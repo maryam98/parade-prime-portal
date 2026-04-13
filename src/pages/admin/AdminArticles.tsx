@@ -56,8 +56,8 @@ const AdminArticles = () => {
         if (error) throw error;
       }
     },
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-articles'] }); setEditing(null); toast.success('Article saved'); },
-    onError: () => toast.error('Failed to save article'),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-articles'] }); setEditing(null); toast.success(t('admin.articleSaved')); },
+    onError: () => toast.error(t('admin.articleSaveFailed')),
   });
 
   const remove = useMutation({
@@ -65,7 +65,7 @@ const AdminArticles = () => {
       const { error } = await supabase.from('articles').delete().eq('id', id);
       if (error) throw error;
     },
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-articles'] }); setDeleteId(null); toast.success('Article deleted'); },
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-articles'] }); setDeleteId(null); toast.success(t('admin.articleDeleted')); },
   });
 
   const openEdit = (a: any) => {
@@ -79,10 +79,10 @@ const AdminArticles = () => {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-heading font-bold text-foreground">{t('admin.articles')}</h1>
-            <p className="text-sm text-muted-foreground mt-1">Create and manage blog articles</p>
+            <p className="text-sm text-muted-foreground mt-1">{t('admin.manageArticles')}</p>
           </div>
           <Button onClick={() => { setForm(empty); setEditing('new'); }}>
-            <Plus className="h-4 w-4" /> Add Article
+            <Plus className="h-4 w-4" /> {t('admin.addArticle')}
           </Button>
         </div>
 
@@ -91,9 +91,9 @@ const AdminArticles = () => {
         ) : articles.length === 0 ? (
           <div className="text-center py-20 border border-dashed border-border rounded-xl">
             <FileText className="h-12 w-12 mx-auto text-muted-foreground/30 mb-3" />
-            <p className="text-muted-foreground">No articles yet</p>
+            <p className="text-muted-foreground">{t('admin.noArticles')}</p>
             <Button variant="outline" className="mt-4" onClick={() => { setForm(empty); setEditing('new'); }}>
-              <Plus className="h-4 w-4" /> Write your first article
+              <Plus className="h-4 w-4" /> {t('admin.firstArticle')}
             </Button>
           </div>
         ) : (
@@ -101,11 +101,11 @@ const AdminArticles = () => {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border bg-muted/50">
-                  <th className="text-left px-5 py-3 text-muted-foreground font-medium">Title</th>
-                  <th className="text-left px-5 py-3 text-muted-foreground font-medium">Category</th>
-                  <th className="text-left px-5 py-3 text-muted-foreground font-medium">Date</th>
-                  <th className="text-left px-5 py-3 text-muted-foreground font-medium">Status</th>
-                  <th className="text-right px-5 py-3 text-muted-foreground font-medium">Actions</th>
+                  <th className="text-left px-5 py-3 text-muted-foreground font-medium">{t('common.title')}</th>
+                  <th className="text-left px-5 py-3 text-muted-foreground font-medium">{t('admin.category')}</th>
+                  <th className="text-left px-5 py-3 text-muted-foreground font-medium">{t('common.date')}</th>
+                  <th className="text-left px-5 py-3 text-muted-foreground font-medium">{t('common.status')}</th>
+                  <th className="text-right px-5 py-3 text-muted-foreground font-medium">{t('common.actions')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -133,30 +133,29 @@ const AdminArticles = () => {
           </div>
         )}
 
-        {/* Form Dialog */}
         <Dialog open={!!editing} onOpenChange={(open) => !open && setEditing(null)}>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>{editing === 'new' ? 'New Article' : 'Edit Article'}</DialogTitle>
+              <DialogTitle>{editing === 'new' ? t('admin.newArticle') : t('admin.editArticle')}</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 pt-2">
-              <div><Label>Title</Label><Input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} className="mt-1.5" /></div>
-              <div><Label>Excerpt</Label><Input value={form.excerpt} onChange={e => setForm(f => ({ ...f, excerpt: e.target.value }))} className="mt-1.5" /></div>
-              <div><Label>Content</Label><Textarea rows={6} value={form.content} onChange={e => setForm(f => ({ ...f, content: e.target.value }))} className="mt-1.5" /></div>
+              <div><Label>{t('common.title')}</Label><Input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} className="mt-1.5" /></div>
+              <div><Label>{t('admin.excerpt')}</Label><Input value={form.excerpt} onChange={e => setForm(f => ({ ...f, excerpt: e.target.value }))} className="mt-1.5" /></div>
+              <div><Label>{t('admin.content')}</Label><Textarea rows={6} value={form.content} onChange={e => setForm(f => ({ ...f, content: e.target.value }))} className="mt-1.5" /></div>
               <div className="grid grid-cols-3 gap-4">
-                <div><Label>Category</Label><Input value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value }))} className="mt-1.5" /></div>
-                <div><Label>Publish Date</Label><Input type="date" value={form.published_at} onChange={e => setForm(f => ({ ...f, published_at: e.target.value }))} className="mt-1.5" /></div>
+                <div><Label>{t('admin.category')}</Label><Input value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value }))} className="mt-1.5" /></div>
+                <div><Label>{t('admin.publishDate')}</Label><Input type="date" value={form.published_at} onChange={e => setForm(f => ({ ...f, published_at: e.target.value }))} className="mt-1.5" /></div>
                 <div>
-                  <Label>Status</Label>
+                  <Label>{t('common.status')}</Label>
                   <select value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))}
                     className="mt-1.5 w-full h-10 px-3 rounded-md border border-input bg-background text-sm">
-                    <option value="Draft">Draft</option><option value="Published">Published</option>
+                    <option value="Draft">{t('common.draft')}</option><option value="Published">{t('common.published')}</option>
                   </select>
                 </div>
               </div>
-              <div><Label>Image</Label><div className="mt-1.5"><ImageUpload value={form.image_url} onChange={url => setForm(f => ({ ...f, image_url: url }))} folder="articles" /></div></div>
+              <div><Label>{t('common.image')}</Label><div className="mt-1.5"><ImageUpload value={form.image_url} onChange={url => setForm(f => ({ ...f, image_url: url }))} folder="articles" /></div></div>
               <Button onClick={() => save.mutate()} disabled={save.isPending || !form.title.trim()} className="w-full">
-                {save.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />} Save
+                {save.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />} {t('common.save')}
               </Button>
             </div>
           </DialogContent>
@@ -165,12 +164,12 @@ const AdminArticles = () => {
         <AlertDialog open={!!deleteId} onOpenChange={(open) => !open && setDeleteId(null)}>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Delete Article</AlertDialogTitle>
-              <AlertDialogDescription>Are you sure? This action cannot be undone.</AlertDialogDescription>
+              <AlertDialogTitle>{t('admin.deleteArticle')}</AlertDialogTitle>
+              <AlertDialogDescription>{t('admin.deleteConfirm')}</AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={() => deleteId && remove.mutate(deleteId)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">Delete</AlertDialogAction>
+              <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
+              <AlertDialogAction onClick={() => deleteId && remove.mutate(deleteId)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">{t('common.delete')}</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

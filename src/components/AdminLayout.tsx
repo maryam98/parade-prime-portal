@@ -29,15 +29,14 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
     { path: '/admin/messages', label: t('admin.messages'), icon: MessageSquare },
     { path: '/admin/reservations', label: t('admin.reservations'), icon: CalendarDays },
     { path: '/admin/users', label: t('admin.users'), icon: Users },
-    { path: '/admin/faq', label: 'FAQ', icon: HelpCircle },
+    { path: '/admin/faq', label: t('admin.faq'), icon: HelpCircle },
     { path: '/admin/settings', label: t('admin.settings'), icon: SettingsIcon },
-    { path: '/admin/blocked-ips', label: 'IP بلاک', icon: Shield },
+    { path: '/admin/blocked-ips', label: t('admin.blockedIps'), icon: Shield },
   ];
 
   const isActive = (path: string) => location.pathname === path;
   const currentPage = menuItems.find(m => isActive(m.path));
 
-  // Unread messages count for badge
   const { data: unreadCount = 0 } = useQuery({
     queryKey: ['admin-unread-count'],
     queryFn: async () => {
@@ -109,7 +108,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
             className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-muted-foreground hover:text-card-foreground hover:bg-muted/50 transition-colors"
           >
             <ExternalLink className="h-4 w-4 shrink-0" />
-            <span>Back to Website</span>
+            <span>{t('admin.backToSite')}</span>
           </Link>
         </div>
       </aside>
@@ -130,7 +129,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
 
             {/* Breadcrumb */}
             <nav className="hidden sm:flex items-center gap-1.5 text-sm">
-              <Link to="/admin" className="text-muted-foreground hover:text-foreground transition-colors">Admin</Link>
+              <Link to="/admin" className="text-muted-foreground hover:text-foreground transition-colors">{t('admin.dashboard')}</Link>
               {currentPage && currentPage.path !== '/admin' && (
                 <>
                   <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/50" />
@@ -166,14 +165,14 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuItem onClick={() => navigate('/profile')}>
-                  <Users className="h-4 w-4 mr-2" /> Profile
+                  <Users className="h-4 w-4 mr-2" /> {t('admin.profile')}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate('/')}>
-                  <ExternalLink className="h-4 w-4 mr-2" /> View Site
+                  <ExternalLink className="h-4 w-4 mr-2" /> {t('admin.viewSite')}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:text-destructive">
-                  <LogOut className="h-4 w-4 mr-2" /> Logout
+                  <LogOut className="h-4 w-4 mr-2" /> {t('admin.logout')}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

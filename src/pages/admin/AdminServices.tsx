@@ -47,8 +47,8 @@ const AdminServices = () => {
         if (error) throw error;
       }
     },
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-services'] }); setEditing(null); toast.success('Service saved successfully'); },
-    onError: () => toast.error('Failed to save service'),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-services'] }); setEditing(null); toast.success(t('admin.serviceSaved')); },
+    onError: () => toast.error(t('admin.serviceSaveFailed')),
   });
 
   const remove = useMutation({
@@ -56,8 +56,8 @@ const AdminServices = () => {
       const { error } = await supabase.from('services').delete().eq('id', id);
       if (error) throw error;
     },
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-services'] }); setDeleteId(null); toast.success('Service deleted'); },
-    onError: () => toast.error('Failed to delete service'),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-services'] }); setDeleteId(null); toast.success(t('admin.serviceDeleted')); },
+    onError: () => toast.error(t('admin.serviceDeleteFailed')),
   });
 
   const openEdit = (s: any) => {
@@ -71,23 +71,21 @@ const AdminServices = () => {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-heading font-bold text-foreground">{t('admin.services')}</h1>
-            <p className="text-sm text-muted-foreground mt-1">Manage your service offerings</p>
+            <p className="text-sm text-muted-foreground mt-1">{t('admin.manageServices')}</p>
           </div>
           <Button onClick={() => { setForm(empty); setEditing('new'); }}>
-            <Plus className="h-4 w-4" /> Add Service
+            <Plus className="h-4 w-4" /> {t('admin.addService')}
           </Button>
         </div>
 
         {isLoading ? (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-          </div>
+          <div className="flex items-center justify-center py-20"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
         ) : services.length === 0 ? (
           <div className="text-center py-20 border border-dashed border-border rounded-xl">
             <Layers className="h-12 w-12 mx-auto text-muted-foreground/30 mb-3" />
-            <p className="text-muted-foreground">No services yet</p>
+            <p className="text-muted-foreground">{t('admin.noServices')}</p>
             <Button variant="outline" className="mt-4" onClick={() => { setForm(empty); setEditing('new'); }}>
-              <Plus className="h-4 w-4" /> Add your first service
+              <Plus className="h-4 w-4" /> {t('admin.firstService')}
             </Button>
           </div>
         ) : (
@@ -95,10 +93,10 @@ const AdminServices = () => {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border bg-muted/50">
-                  <th className="text-left px-5 py-3 text-muted-foreground font-medium">Title</th>
-                  <th className="text-left px-5 py-3 text-muted-foreground font-medium">Icon</th>
-                  <th className="text-left px-5 py-3 text-muted-foreground font-medium">Status</th>
-                  <th className="text-right px-5 py-3 text-muted-foreground font-medium">Actions</th>
+                  <th className="text-left px-5 py-3 text-muted-foreground font-medium">{t('common.title')}</th>
+                  <th className="text-left px-5 py-3 text-muted-foreground font-medium">{t('admin.icon')}</th>
+                  <th className="text-left px-5 py-3 text-muted-foreground font-medium">{t('common.status')}</th>
+                  <th className="text-right px-5 py-3 text-muted-foreground font-medium">{t('common.actions')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -122,49 +120,47 @@ const AdminServices = () => {
           </div>
         )}
 
-        {/* Form Dialog */}
         <Dialog open={!!editing} onOpenChange={(open) => !open && setEditing(null)}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>{editing === 'new' ? 'New Service' : 'Edit Service'}</DialogTitle>
+              <DialogTitle>{editing === 'new' ? t('admin.newService') : t('admin.editService')}</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 pt-2">
-              <div><Label>Title</Label><Input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} className="mt-1.5" /></div>
-              <div><Label>Description</Label><Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} className="mt-1.5" /></div>
+              <div><Label>{t('common.title')}</Label><Input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} className="mt-1.5" /></div>
+              <div><Label>{t('common.description')}</Label><Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} className="mt-1.5" /></div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label>Icon</Label>
+                  <Label>{t('admin.icon')}</Label>
                   <select value={form.icon} onChange={e => setForm(f => ({ ...f, icon: e.target.value }))}
                     className="mt-1.5 w-full h-10 px-3 rounded-md border border-input bg-background text-sm">
                     {icons.map(ic => <option key={ic} value={ic}>{ic}</option>)}
                   </select>
                 </div>
                 <div>
-                  <Label>Status</Label>
+                  <Label>{t('common.status')}</Label>
                   <select value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))}
                     className="mt-1.5 w-full h-10 px-3 rounded-md border border-input bg-background text-sm">
-                    <option value="Active">Active</option>
-                    <option value="Draft">Draft</option>
+                    <option value="Active">{t('common.active')}</option>
+                    <option value="Draft">{t('common.draft')}</option>
                   </select>
                 </div>
               </div>
               <Button onClick={() => save.mutate()} disabled={save.isPending || !form.title.trim()} className="w-full">
-                {save.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />} Save
+                {save.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />} {t('common.save')}
               </Button>
             </div>
           </DialogContent>
         </Dialog>
 
-        {/* Delete Confirmation */}
         <AlertDialog open={!!deleteId} onOpenChange={(open) => !open && setDeleteId(null)}>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Delete Service</AlertDialogTitle>
-              <AlertDialogDescription>Are you sure you want to delete this service? This action cannot be undone.</AlertDialogDescription>
+              <AlertDialogTitle>{t('admin.deleteService')}</AlertDialogTitle>
+              <AlertDialogDescription>{t('admin.deleteServiceConfirm')}</AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={() => deleteId && remove.mutate(deleteId)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">Delete</AlertDialogAction>
+              <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
+              <AlertDialogAction onClick={() => deleteId && remove.mutate(deleteId)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">{t('common.delete')}</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
