@@ -1,12 +1,12 @@
 import { useTranslation } from 'react-i18next';
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { lovable } from '@/integrations/lovable';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
-import HCaptcha from '@hcaptcha/react-hcaptcha';
+import { Turnstile } from '@marsidev/react-turnstile';
 
 const Register = () => {
   const { t, i18n } = useTranslation();
@@ -18,10 +18,9 @@ const Register = () => {
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [captchaToken, setCaptchaToken] = useState('');
-  const captchaRef = useRef<HCaptcha>(null);
   const { signUp } = useAuth();
   const settings = useSiteSettings();
-  const hcaptchaSiteKey = settings.hcaptcha_site_key;
+  const turnstileSiteKey = settings.hcaptcha_site_key;
 
   const labels = {
     orContinueWith: isRtl ? 'یا ثبت‌نام با' : i18n.language === 'de' ? 'Oder registrieren mit' : 'Or sign up with',
@@ -31,7 +30,7 @@ const Register = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (hcaptchaSiteKey && !captchaToken) {
+    if (turnstileSiteKey && !captchaToken) {
       setError(isRtl ? 'لطفاً کپچا را تکمیل کنید' : 'Please complete the captcha');
       return;
     }
@@ -40,7 +39,6 @@ const Register = () => {
     const { error } = await signUp(email, password, displayName);
     if (error) {
       setError(error.message);
-      captchaRef.current?.resetCaptcha();
       setCaptchaToken('');
     } else {
       setSuccess(true);
@@ -100,9 +98,9 @@ const Register = () => {
             <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6}
               className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
           </div>
-          {hcaptchaSiteKey && (
+          {turnstileSiteKey && (
             <div className="flex justify-center">
-              <HCaptcha sitekey={hcaptchaSiteKey} onVerify={setCaptchaToken} ref={captchaRef} />
+              <Turnstile siteKey={turnstileSiteKey} onSuccess={setCaptchaToken} />
             </div>
           )}
           <button type="submit" disabled={loading}
