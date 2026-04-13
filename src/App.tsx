@@ -32,6 +32,8 @@ import AdminSettings from "./pages/admin/AdminSettings";
 import FAQ from "./pages/FAQ";
 import AdminFAQ from "./pages/admin/AdminFAQ";
 import NotFound from "./pages/NotFound";
+import AdminBlockedIPs from "./pages/admin/AdminBlockedIPs";
+import CookieConsent from "./components/CookieConsent";
 
 const queryClient = new QueryClient();
 
@@ -73,8 +75,11 @@ const App = () => (
             <Route path="/admin/users" element={<ProtectedRoute requireAdmin><AdminUsers /></ProtectedRoute>} />
             <Route path="/admin/faq" element={<ProtectedRoute requireAdmin><AdminFAQ /></ProtectedRoute>} />
             <Route path="/admin/settings" element={<ProtectedRoute requireAdmin><AdminSettings /></ProtectedRoute>} />
+            <Route path="/admin/blocked-ips" element={<ProtectedRoute requireAdmin><AdminBlockedIPs /></ProtectedRoute>} />
 
             <Route path="*" element={<NotFound />} />
+          </Routes>
+          <CookieConsent />
           </Routes>
         </AuthProvider>
       </BrowserRouter>
