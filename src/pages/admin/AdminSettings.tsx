@@ -238,10 +238,10 @@ const AdminSettings = () => {
             <TabsContent value="security">
               <div className="p-6 rounded-xl border border-border bg-card space-y-4">
                 <h2 className="font-heading font-semibold text-card-foreground">تنظیمات امنیتی</h2>
-                <SettingTextField form={form} setForm={setForm} settingKey="hcaptcha_site_key" label="hCaptcha Site Key" placeholder="10000000-ffff-ffff-ffff-000000000001" />
+                <SettingTextField form={form} setForm={setForm} settingKey="hcaptcha_site_key" label="Cloudflare Turnstile Site Key" placeholder="0x4AAAAAAA..." />
                 <div className="p-4 rounded-lg bg-muted/50 border border-border">
                   <p className="text-xs text-muted-foreground">
-                    💡 برای فعال‌سازی کپچا در فرم‌های ورود و ثبت‌نام، <a href="https://www.hcaptcha.com/signup-interstitial" target="_blank" rel="noopener" className="text-primary underline">اینجا ثبت‌نام کنید</a> و Site Key را وارد کنید.
+                    💡 برای فعال‌سازی کپچا در فرم‌های ورود و ثبت‌نام، از <a href="https://dash.cloudflare.com/" target="_blank" rel="noopener" className="text-primary underline">Cloudflare Dashboard</a> → Turnstile → Add Site، یک Site Key بگیرید. <strong>کاملاً رایگان!</strong>
                   </p>
                 </div>
                 <div className="border-t border-border pt-4">
