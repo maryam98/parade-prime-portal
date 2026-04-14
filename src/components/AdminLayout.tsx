@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Settings as SettingsIcon, FileText, Package, Image, MessageSquare,
-  CalendarDays, Users, Layers, Menu, HelpCircle, LogOut, ExternalLink, ChevronRight, Bell, Shield, BookOpen
+  CalendarDays, Users, Layers, Menu, HelpCircle, LogOut, ExternalLink, ChevronRight, Bell, Shield, BookOpen, Clock
 } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
