@@ -1,11 +1,12 @@
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { Menu, X, Globe, LogOut, User } from 'lucide-react';
+import { Menu, X, Globe, LogOut, User, Search } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
 import logo from '@/assets/logo.png';
+import GlobalSearch from './GlobalSearch';
 
 const languages = [
   { code: 'en', label: 'EN' },
@@ -23,6 +24,7 @@ const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   const isRtl = i18n.language === 'fa';
 
@@ -45,6 +47,7 @@ const Header = () => {
   };
 
   return (
+    <>
     <header dir={isRtl ? 'rtl' : 'ltr'} className="fixed top-0 left-0 right-0 z-50 bg-accent/95 backdrop-blur-md border-b border-border/10">
       <div className="container mx-auto flex items-center justify-between h-16 px-4">
         <Link to="/" className="flex items-center gap-2">
@@ -68,6 +71,15 @@ const Header = () => {
         </nav>
 
         <div className="hidden lg:flex items-center gap-3">
+          {/* Global Search */}
+          <button
+            onClick={() => setSearchOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm text-accent-foreground/70 hover:text-accent-foreground transition-colors"
+            title="Ctrl+K"
+          >
+            <Search className="h-4 w-4" />
+          </button>
+
           {/* Language Switcher */}
           <div className="relative">
             <button
@@ -219,6 +231,13 @@ const Header = () => {
                   </button>
                 ))}
               </div>
+              <button
+                onClick={() => { setSearchOpen(true); setMobileOpen(false); }}
+                className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-accent-foreground/70"
+              >
+                <Search className="h-4 w-4" />
+                {isRtl ? 'جستجو' : i18n.language === 'de' ? 'Suchen' : 'Search'}
+              </button>
               <Link
                 to="/reservation"
                 onClick={() => setMobileOpen(false)}
@@ -247,6 +266,9 @@ const Header = () => {
         )}
       </AnimatePresence>
     </header>
+
+    <GlobalSearch open={searchOpen} onOpenChange={setSearchOpen} />
+    </>
   );
 };
 
