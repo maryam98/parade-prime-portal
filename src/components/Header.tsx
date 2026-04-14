@@ -265,6 +265,9 @@ const Header = () => {
         )}
       </AnimatePresence>
     </header>
+
+    <GlobalSearch open={searchOpen} onOpenChange={setSearchOpen} />
+    </>
   );
 };
 
