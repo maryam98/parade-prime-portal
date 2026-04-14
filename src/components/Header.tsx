@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
 import logo from '@/assets/logo.png';
+import GlobalSearch from './GlobalSearch';
 
 const languages = [
   { code: 'en', label: 'EN' },
