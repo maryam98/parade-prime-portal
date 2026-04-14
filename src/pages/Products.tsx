@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { ExternalLink, Search } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useState, useMemo } from 'react';
@@ -73,14 +74,35 @@ const Products = () => {
               {filtered.map((product, i) => (
                 <motion.div key={product.id} initial="hidden" whileInView="visible" viewport={{ once: true }}
                   variants={fadeUp} custom={i}
-                  className="group p-8 rounded-xl border border-border bg-card hover:border-primary/30 hover:shadow-xl transition-all duration-300">
-                  <h3 className="text-xl font-heading font-semibold text-card-foreground">{product.name}</h3>
-                  <p className="mt-3 text-muted-foreground">{product.description}</p>
-                  <div className="mt-5 flex items-center justify-between">
-                    <span className="text-2xl font-heading font-bold text-primary">{product.price}</span>
-                    <button className="flex items-center gap-1.5 text-sm text-primary font-medium hover:underline">
-                      {t('products.learnMore')} <ExternalLink className="h-4 w-4" />
-                    </button>
+                  className="group rounded-xl border border-border bg-card hover:border-primary/30 hover:shadow-xl transition-all duration-300 overflow-hidden">
+                  {product.image_url && (
+                    <div className="w-full h-48 overflow-hidden">
+                      <img src={product.image_url} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                    </div>
+                  )}
+                  <div className="p-8">
+                    <h3 className="text-xl font-heading font-semibold text-card-foreground">{product.name}</h3>
+                    <p className="mt-3 text-muted-foreground">{product.description}</p>
+                    <div className="mt-5 flex items-center justify-between">
+                      <span className="text-2xl font-heading font-bold text-primary">{product.price}</span>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <button className="flex items-center gap-1.5 text-sm text-primary font-medium hover:underline">
+                            {t('products.learnMore')} <ExternalLink className="h-4 w-4" />
+                          </button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-lg">
+                          <DialogHeader>
+                            <DialogTitle>{product.name}</DialogTitle>
+                          </DialogHeader>
+                          {product.image_url && (
+                            <img src={product.image_url} alt={product.name} className="w-full h-56 object-cover rounded-lg" />
+                          )}
+                          <p className="text-muted-foreground">{product.description}</p>
+                          {product.price && <p className="text-2xl font-heading font-bold text-primary">{product.price}</p>}
+                        </DialogContent>
+                      </Dialog>
+                    </div>
                   </div>
                 </motion.div>
               ))}
