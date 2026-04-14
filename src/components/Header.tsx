@@ -70,6 +70,15 @@ const Header = () => {
         </nav>
 
         <div className="hidden lg:flex items-center gap-3">
+          {/* Global Search */}
+          <button
+            onClick={() => setSearchOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm text-accent-foreground/70 hover:text-accent-foreground transition-colors"
+            title="Ctrl+K"
+          >
+            <Search className="h-4 w-4" />
+          </button>
+
           {/* Language Switcher */}
           <div className="relative">
             <button
