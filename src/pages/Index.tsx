@@ -147,10 +147,10 @@ const Home = () => {
         <div className="container mx-auto px-4">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-14">
             <motion.h2 variants={fadeUp} custom={0} className="text-3xl lg:text-4xl font-heading font-bold text-foreground">
-              {t('services.title')}
+              {pc('services_title', t('services.title'))}
             </motion.h2>
             <motion.p variants={fadeUp} custom={1} className="mt-3 text-muted-foreground max-w-xl mx-auto">
-              {t('services.subtitle')}
+              {pc('services_subtitle', t('services.subtitle'))}
             </motion.p>
           </motion.div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -173,10 +173,10 @@ const Home = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
             {[
-              { value: '120+', label: t('about.stats.projects') },
-              { value: '80+', label: t('about.stats.clients') },
-              { value: '8+', label: t('about.stats.years') },
-              { value: '25+', label: t('about.stats.team') },
+              { value: pc('stat_projects_value', '120+'), label: pc('stat_projects_label', t('about.stats.projects')) },
+              { value: pc('stat_clients_value', '80+'), label: pc('stat_clients_label', t('about.stats.clients')) },
+              { value: pc('stat_years_value', '8+'), label: pc('stat_years_label', t('about.stats.years')) },
+              { value: pc('stat_team_value', '25+'), label: pc('stat_team_label', t('about.stats.team')) },
             ].map((stat, i) => (
               <motion.div key={i} initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
                 <div className="text-3xl lg:text-4xl font-heading font-bold text-primary">{stat.value}</div>
@@ -190,14 +190,14 @@ const Home = () => {
       {/* CTA */}
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl lg:text-4xl font-heading font-bold text-foreground">{t('contact.title')}</h2>
-          <p className="mt-3 text-muted-foreground">{t('contact.subtitle')}</p>
+          <h2 className="text-3xl lg:text-4xl font-heading font-bold text-foreground">{pc('cta_title', t('contact.title'))}</h2>
+          <p className="mt-3 text-muted-foreground">{pc('cta_subtitle', t('contact.subtitle'))}</p>
           <div className="mt-8 flex flex-wrap gap-4 justify-center">
             <Link to="/contact" className="px-8 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors">
-              {t('contact.send')}
+              {pc('cta_button', t('contact.send'))}
             </Link>
             <Link to="/reservation" className="px-8 py-3 border border-border text-foreground rounded-lg font-medium hover:bg-muted transition-colors">
-              {t('nav.reservation')}
+              {pc('cta_button2', t('nav.reservation'))}
             </Link>
           </div>
         </div>
