@@ -26,6 +26,7 @@ const Home = () => {
   const isRtl = i18n.language === 'fa';
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
+  const { content: pc } = usePageContent('home');
 
   const { data: slides = [] } = useQuery({
     queryKey: ['hero-slides'],
