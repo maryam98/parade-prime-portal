@@ -1,9 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { ExternalLink, Search, X } from 'lucide-react';
+import { ExternalLink, Search } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useState, useMemo } from 'react';
+import SearchBar from '@/components/SearchBar';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -56,19 +57,7 @@ const Products = () => {
             {t('products.subtitle')}
           </motion.p>
 
-          {/* Search bar */}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-            className="mt-8 max-w-lg mx-auto relative">
-            <Search className="absolute top-3.5 left-4 h-5 w-5 text-muted-foreground pointer-events-none" />
-            <input type="text" value={search} onChange={e => setSearch(e.target.value)}
-              placeholder={labels.search}
-              className="w-full pl-12 pr-10 py-3 rounded-xl border border-border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring shadow-lg" />
-            {search && (
-              <button onClick={() => setSearch('')} className="absolute top-3.5 right-4 text-muted-foreground hover:text-foreground">
-                <X className="h-5 w-5" />
-              </button>
-            )}
-          </motion.div>
+          <SearchBar value={search} onChange={setSearch} placeholder={labels.search} />
         </div>
       </section>
 
