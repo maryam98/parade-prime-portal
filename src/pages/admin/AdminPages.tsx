@@ -12,6 +12,26 @@ const LANG_LABELS: Record<string, string> = { en: 'English', fa: 'فارسی', d
 
 const PAGES = [
   {
+    slug: 'home',
+    label: 'Home',
+    sections: [
+      { key: 'services_title', label: 'Services Section Title', type: 'text' },
+      { key: 'services_subtitle', label: 'Services Section Subtitle', type: 'text' },
+      { key: 'stat_projects_value', label: 'Stat: Projects Value', type: 'text' },
+      { key: 'stat_projects_label', label: 'Stat: Projects Label', type: 'text' },
+      { key: 'stat_clients_value', label: 'Stat: Clients Value', type: 'text' },
+      { key: 'stat_clients_label', label: 'Stat: Clients Label', type: 'text' },
+      { key: 'stat_years_value', label: 'Stat: Years Value', type: 'text' },
+      { key: 'stat_years_label', label: 'Stat: Years Label', type: 'text' },
+      { key: 'stat_team_value', label: 'Stat: Team Value', type: 'text' },
+      { key: 'stat_team_label', label: 'Stat: Team Label', type: 'text' },
+      { key: 'cta_title', label: 'CTA Title', type: 'text' },
+      { key: 'cta_subtitle', label: 'CTA Subtitle', type: 'text' },
+      { key: 'cta_button', label: 'CTA Button Text', type: 'text' },
+      { key: 'cta_button2', label: 'CTA Button 2 Text', type: 'text' },
+    ],
+  },
+  {
     slug: 'about',
     label: 'About',
     sections: [

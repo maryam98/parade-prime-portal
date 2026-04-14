@@ -5,6 +5,8 @@ import { Code, Smartphone, Palette, Lightbulb, Cloud, Headphones, ChevronLeft, C
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useState, useEffect, useCallback } from 'react';
+import { usePageContent } from '@/hooks/usePageContent';
+import heroBg from '@/assets/hero-bg.jpg';
 import heroBg from '@/assets/hero-bg.jpg';
 
 const fadeUp = {
