@@ -11,14 +11,17 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { format } from 'date-fns';
 
-const DAYS_MAP: Record<number, string> = { 0: 'یکشنبه', 1: 'دوشنبه', 2: 'سه‌شنبه', 3: 'چهارشنبه', 4: 'پنجشنبه', 5: 'جمعه', 6: 'شنبه' };
-const DAYS_MAP_EN: Record<number, string> = { 0: 'Sun', 1: 'Mon', 2: 'Tue', 3: 'Wed', 4: 'Thu', 5: 'Fri', 6: 'Sat' };
+const DAYS_MAP: Record<string, Record<number, string>> = {
+  fa: { 0: 'یکشنبه', 1: 'دوشنبه', 2: 'سه‌شنبه', 3: 'چهارشنبه', 4: 'پنجشنبه', 5: 'جمعه', 6: 'شنبه' },
+  en: { 0: 'Sun', 1: 'Mon', 2: 'Tue', 3: 'Wed', 4: 'Thu', 5: 'Fri', 6: 'Sat' },
+  de: { 0: 'So', 1: 'Mo', 2: 'Di', 3: 'Mi', 4: 'Do', 5: 'Fr', 6: 'Sa' },
+};
 
 const AdminAppointments = () => {
   const { t, i18n } = useTranslation();
   const qc = useQueryClient();
   const isRtl = i18n.language === 'fa';
-  const daysMap = isRtl ? DAYS_MAP : DAYS_MAP_EN;
+  const daysMap = DAYS_MAP[i18n.language] || DAYS_MAP.en;
 
   // State
   const [scheduleDialog, setScheduleDialog] = useState(false);
