@@ -230,6 +230,13 @@ const Header = () => {
                   </button>
                 ))}
               </div>
+              <button
+                onClick={() => { setSearchOpen(true); setMobileOpen(false); }}
+                className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-accent-foreground/70"
+              >
+                <Search className="h-4 w-4" />
+                {isRtl ? 'جستجو' : i18n.language === 'de' ? 'Suchen' : 'Search'}
+              </button>
               <Link
                 to="/reservation"
                 onClick={() => setMobileOpen(false)}
