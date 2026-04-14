@@ -52,6 +52,14 @@ const PAGES = [
       { key: 'stat_team_label', label: 'Stat: Team Label', type: 'text' },
     ],
   },
+  {
+    slug: 'services',
+    label: 'Services',
+    sections: [
+      { key: 'title', label: 'Page Title', type: 'text' },
+      { key: 'subtitle', label: 'Page Subtitle', type: 'text' },
+    ],
+  },
 ];
 
 const AdminPages = () => {
