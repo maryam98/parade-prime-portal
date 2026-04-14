@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useState, useMemo } from 'react';
 import SearchBar from '@/components/SearchBar';
+import { usePageContent } from '@/hooks/usePageContent';
 
 const iconMap: Record<string, LucideIcon> = {
   Code, Smartphone, Palette, Lightbulb, Cloud, Headphones,
@@ -19,6 +20,7 @@ const Services = () => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.language === 'fa';
   const [search, setSearch] = useState('');
+  const { get: pc } = usePageContent('services');
 
   const { data: services = [] } = useQuery({
     queryKey: ['services'],
@@ -53,11 +55,11 @@ const Services = () => {
         <div className="container mx-auto px-4 text-center">
           <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
             className="text-4xl lg:text-5xl font-heading font-bold text-surface-dark-foreground">
-            {t('services.title')}
+            {pc('title', t('services.title'))}
           </motion.h1>
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
             className="mt-4 text-surface-dark-foreground/60 max-w-xl mx-auto">
-            {t('services.subtitle')}
+            {pc('subtitle', t('services.subtitle'))}
           </motion.p>
 
           <SearchBar value={search} onChange={setSearch} placeholder={labels.search} />
