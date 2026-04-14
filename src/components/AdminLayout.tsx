@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Settings as SettingsIcon, FileText, Package, Image, MessageSquare,
-  CalendarDays, Users, Layers, Menu, HelpCircle, LogOut, ExternalLink, ChevronRight, Bell, Shield
+  CalendarDays, Users, Layers, Menu, HelpCircle, LogOut, ExternalLink, ChevronRight, Bell, Shield, BookOpen
 } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -31,6 +31,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
     { path: '/admin/users', label: t('admin.users'), icon: Users },
     { path: '/admin/faq', label: t('admin.faq'), icon: HelpCircle },
     { path: '/admin/settings', label: t('admin.settings'), icon: SettingsIcon },
+    { path: '/admin/pages', label: t('admin.pages'), icon: BookOpen },
     { path: '/admin/blocked-ips', label: t('admin.blockedIps'), icon: Shield },
   ];
 

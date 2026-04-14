@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Target, Eye } from 'lucide-react';
+import { usePageContent } from '@/hooks/usePageContent';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -10,6 +11,7 @@ const fadeUp = {
 const About = () => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.language === 'fa';
+  const { get } = usePageContent('about');
 
   return (
     <div dir={isRtl ? 'rtl' : 'ltr'}>
@@ -21,7 +23,7 @@ const About = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-4xl lg:text-5xl font-heading font-bold text-surface-dark-foreground"
           >
-            {t('about.title')}
+            {get('title', t('about.title'))}
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -29,7 +31,7 @@ const About = () => {
             transition={{ delay: 0.2 }}
             className="mt-4 text-surface-dark-foreground/60 max-w-2xl mx-auto"
           >
-            {t('about.subtitle')}
+            {get('subtitle', t('about.subtitle'))}
           </motion.p>
         </div>
       </section>
@@ -45,7 +47,7 @@ const About = () => {
             custom={0}
             className="text-lg text-muted-foreground leading-relaxed text-center"
           >
-            {t('about.description')}
+            {get('description', t('about.description'))}
           </motion.p>
         </div>
       </section>
@@ -55,8 +57,8 @@ const About = () => {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-8">
             {[
-              { icon: Target, title: t('about.mission'), text: t('about.missionText') },
-              { icon: Eye, title: t('about.vision'), text: t('about.visionText') },
+              { icon: Target, title: get('mission_title', t('about.mission')), text: get('mission_text', t('about.missionText')) },
+              { icon: Eye, title: get('vision_title', t('about.vision')), text: get('vision_text', t('about.visionText')) },
             ].map((item, i) => (
               <motion.div
                 key={i}
@@ -83,10 +85,10 @@ const About = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
             {[
-              { value: '120+', label: t('about.stats.projects') },
-              { value: '80+', label: t('about.stats.clients') },
-              { value: '8+', label: t('about.stats.years') },
-              { value: '25+', label: t('about.stats.team') },
+              { value: get('stat_projects_value', '120+'), label: get('stat_projects_label', t('about.stats.projects')) },
+              { value: get('stat_clients_value', '80+'), label: get('stat_clients_label', t('about.stats.clients')) },
+              { value: get('stat_years_value', '8+'), label: get('stat_years_label', t('about.stats.years')) },
+              { value: get('stat_team_value', '25+'), label: get('stat_team_label', t('about.stats.team')) },
             ].map((stat, i) => (
               <motion.div
                 key={i}
