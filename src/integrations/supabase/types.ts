@@ -14,6 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
+      appointments: {
+        Row: {
+          admin_booked: boolean
+          appointment_date: string
+          appointment_time: string
+          created_at: string
+          duration: number
+          email: string
+          id: string
+          name: string
+          notes: string | null
+          phone: string | null
+          status: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          admin_booked?: boolean
+          appointment_date: string
+          appointment_time: string
+          created_at?: string
+          duration?: number
+          email: string
+          id?: string
+          name: string
+          notes?: string | null
+          phone?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          admin_booked?: boolean
+          appointment_date?: string
+          appointment_time?: string
+          created_at?: string
+          duration?: number
+          email?: string
+          id?: string
+          name?: string
+          notes?: string | null
+          phone?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       articles: {
         Row: {
           category: string
@@ -49,6 +97,45 @@ export type Database = {
           published_at?: string | null
           status?: string
           title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      availability_schedules: {
+        Row: {
+          created_at: string
+          days_of_week: number[]
+          end_date: string
+          end_time: string
+          id: string
+          is_active: boolean
+          slot_duration: number
+          start_date: string
+          start_time: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          days_of_week?: number[]
+          end_date: string
+          end_time?: string
+          id?: string
+          is_active?: boolean
+          slot_duration?: number
+          start_date: string
+          start_time?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          days_of_week?: number[]
+          end_date?: string
+          end_time?: string
+          id?: string
+          is_active?: boolean
+          slot_duration?: number
+          start_date?: string
+          start_time?: string
           updated_at?: string
         }
         Relationships: []
@@ -179,6 +266,27 @@ export type Database = {
           subtitle?: string | null
           title?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      holidays: {
+        Row: {
+          created_at: string
+          description: string | null
+          holiday_date: string
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          holiday_date: string
+          id?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          holiday_date?: string
+          id?: string
         }
         Relationships: []
       }

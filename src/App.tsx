@@ -27,6 +27,7 @@ import AdminProducts from "./pages/admin/AdminProducts";
 import AdminSlider from "./pages/admin/AdminSlider";
 import AdminMessages from "./pages/admin/AdminMessages";
 import AdminReservations from "./pages/admin/AdminReservations";
+import AdminAppointments from "./pages/admin/AdminAppointments";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminSettings from "./pages/admin/AdminSettings";
 import FAQ from "./pages/FAQ";
@@ -78,6 +79,7 @@ const App = () => (
             <Route path="/admin/settings" element={<ProtectedRoute requireAdmin><AdminSettings /></ProtectedRoute>} />
             <Route path="/admin/blocked-ips" element={<ProtectedRoute requireAdmin><AdminBlockedIPs /></ProtectedRoute>} />
             <Route path="/admin/pages" element={<ProtectedRoute requireAdmin><AdminPages /></ProtectedRoute>} />
+            <Route path="/admin/appointments" element={<ProtectedRoute requireAdmin><AdminAppointments /></ProtectedRoute>} />
 
             <Route path="*" element={<NotFound />} />
           </Routes>
