@@ -198,7 +198,7 @@
 
     "@lovable.dev/cloud-auth-js": ["@lovable.dev/cloud-auth-js@1.1.1", "", {}, "sha512-80elU8dSJG6bho0Xnfj2oy53wp883nYXrG1Wy948LC/ZUaUQ0i9EGXQFmwTLOBFrWqxb6aNaOlZUvQ8BVGhjMQ=="],
 
-    "@marsidev/react-turnstile": ["@marsidev/react-turnstile@1.5.0", "https://europe-west4-npm.pkg.dev/lovable-core-prod/sandbox-npm-cache/@marsidev/react-turnstile/-/react-turnstile-1.5.0.tgz", { "peerDependencies": { "react": "^17.0.2 || ^18.0.0 || ^19.0", "react-dom": "^17.0.2 || ^18.0.0 || ^19.0" } }, "sha512-Ph6mcj8u9WBDsBO7s9jKPsyRDz1sBPBJwrk+Ngx09vFInvKsQ6U6kW5amEcGq4dHOreB6DgFrOJk7/fy318YlQ=="],
+    "@marsidev/react-turnstile": ["@marsidev/react-turnstile@1.5.0", "https://europe-west1-npm.pkg.dev/lovable-core-prod/sandbox-npm-cache/@marsidev/react-turnstile/-/react-turnstile-1.5.0.tgz", { "peerDependencies": { "react": "^17.0.2 || ^18.0.0 || ^19.0", "react-dom": "^17.0.2 || ^18.0.0 || ^19.0" } }, "sha512-Ph6mcj8u9WBDsBO7s9jKPsyRDz1sBPBJwrk+Ngx09vFInvKsQ6U6kW5amEcGq4dHOreB6DgFrOJk7/fy318YlQ=="],
 
     "@nodelib/fs.scandir": ["@nodelib/fs.scandir@2.1.5", "", { "dependencies": { "@nodelib/fs.stat": "2.0.5", "run-parallel": "^1.1.9" } }, "sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g=="],
 
