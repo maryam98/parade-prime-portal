@@ -171,7 +171,41 @@ const Profile = () => {
             </button>
           </motion.form>
 
-          {/* Change Password */}
+          {/* My Appointments */}
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
+            className="p-6 rounded-xl border border-border bg-card space-y-4">
+            <h3 className="font-heading font-semibold text-card-foreground flex items-center gap-2">
+              <CalendarDays className="h-4 w-4" />
+              {isRtl ? 'نوبت‌های من' : i18n.language === 'de' ? 'Meine Termine' : 'My Appointments'}
+            </h3>
+            {loadingAppts ? (
+              <div className="flex justify-center py-6"><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /></div>
+            ) : myAppointments.length === 0 ? (
+              <p className="text-sm text-muted-foreground text-center py-4">
+                {isRtl ? 'نوبتی ثبت نشده است' : i18n.language === 'de' ? 'Keine Termine gefunden' : 'No appointments found'}
+              </p>
+            ) : (
+              <div className="space-y-3">
+                {myAppointments.map((appt) => {
+                  const statusCls = appt.status === 'Confirmed' ? 'bg-green-500/10 text-green-600' : appt.status === 'Pending' ? 'bg-yellow-500/10 text-yellow-600' : 'bg-destructive/10 text-destructive';
+                  return (
+                    <div key={appt.id} className="flex items-center justify-between p-3 rounded-lg bg-muted/30 border border-border/50">
+                      <div className="flex items-center gap-3">
+                        <div className="flex flex-col">
+                          <span className="text-sm font-medium text-card-foreground">{appt.appointment_date}</span>
+                          <span className="text-xs text-muted-foreground flex items-center gap-1">
+                            <Clock className="h-3 w-3" /> {appt.appointment_time?.toString().slice(0, 5)} — {appt.duration} {isRtl ? 'دقیقه' : 'min'}
+                          </span>
+                        </div>
+                      </div>
+                      <span className={`text-xs px-2 py-1 rounded-full ${statusCls}`}>{appt.status}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </motion.div>
+
           <motion.form onSubmit={handlePasswordChange} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
             className="p-6 rounded-xl border border-border bg-card space-y-5">
             <h3 className="font-heading font-semibold text-card-foreground flex items-center gap-2">
