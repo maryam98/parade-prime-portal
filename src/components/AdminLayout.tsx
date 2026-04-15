@@ -27,7 +27,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
     { path: '/admin/products', label: t('admin.products'), icon: Package },
     { path: '/admin/slider', label: t('admin.slider'), icon: Image },
     { path: '/admin/messages', label: t('admin.messages'), icon: MessageSquare },
-    { path: '/admin/reservations', label: t('admin.reservations'), icon: CalendarDays },
+    { path: '/admin/appointments', label: t('admin.reservations'), icon: CalendarDays },
     { path: '/admin/users', label: t('admin.users'), icon: Users },
     { path: '/admin/faq', label: t('admin.faq'), icon: HelpCircle },
     { path: '/admin/settings', label: t('admin.settings'), icon: SettingsIcon },
