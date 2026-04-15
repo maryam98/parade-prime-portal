@@ -32,6 +32,21 @@ const Profile = () => {
     }
   }, [profile]);
 
+  const { data: myAppointments = [], isLoading: loadingAppts } = useQuery({
+    queryKey: ['my-appointments', user?.id],
+    queryFn: async () => {
+      if (!user?.id) return [];
+      const { data, error } = await supabase
+        .from('appointments')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('appointment_date', { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user?.id,
+  });
+
   const labels = {
     title: isRtl ? 'پروفایل من' : i18n.language === 'de' ? 'Mein Profil' : 'My Profile',
     subtitle: isRtl ? 'اطلاعات حساب خود را مدیریت کنید' : i18n.language === 'de' ? 'Verwalten Sie Ihre Kontoinformationen' : 'Manage your account information',
