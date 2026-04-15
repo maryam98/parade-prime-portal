@@ -99,7 +99,8 @@ const Products = () => {
                             <img src={product.image_url} alt={product.name} className="w-full h-56 object-cover rounded-lg" />
                           )}
                           <p className="text-muted-foreground">{product.description}</p>
-                          {product.price && <p className="text-2xl font-heading font-bold text-primary">{product.price}</p>}
+                          {product.content && <div className="mt-3 text-sm text-muted-foreground whitespace-pre-wrap">{product.content}</div>}
+                          {product.price && <p className="text-2xl font-heading font-bold text-primary mt-3">{product.price}</p>}
                         </DialogContent>
                       </Dialog>
                     </div>
