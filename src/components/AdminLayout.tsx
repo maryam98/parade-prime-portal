@@ -32,7 +32,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
     { path: '/admin/faq', label: t('admin.faq'), icon: HelpCircle },
     { path: '/admin/settings', label: t('admin.settings'), icon: SettingsIcon },
     { path: '/admin/pages', label: t('admin.pages'), icon: BookOpen },
-    { path: '/admin/appointments', label: t('admin.appointmentSystem', 'نوبت‌دهی'), icon: Clock },
+    
     { path: '/admin/blocked-ips', label: t('admin.blockedIps'), icon: Shield },
   ];
 
