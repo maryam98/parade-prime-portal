@@ -10,17 +10,19 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 
 interface ProductForm {
   name: string;
   description: string;
+  content: string;
   price: string;
   status: string;
   image_url: string;
 }
 
-const empty: ProductForm = { name: '', description: '', price: '', status: 'Active', image_url: '' };
+const empty: ProductForm = { name: '', description: '', content: '', price: '', status: 'Active', image_url: '' };
 
 const AdminProducts = () => {
   const { t } = useTranslation();
@@ -40,7 +42,7 @@ const AdminProducts = () => {
 
   const save = useMutation({
     mutationFn: async () => {
-      const payload = { name: form.name, description: form.description || null, price: form.price || null, status: form.status, image_url: form.image_url || null };
+      const payload = { name: form.name, description: form.description || null, content: form.content || null, price: form.price || null, status: form.status, image_url: form.image_url || null };
       if (editing === 'new') {
         const { error } = await supabase.from('products').insert({ ...payload, sort_order: products.length + 1 });
         if (error) throw error;
@@ -62,7 +64,7 @@ const AdminProducts = () => {
   });
 
   const openEdit = (p: any) => {
-    setForm({ name: p.name, description: p.description || '', price: p.price || '', status: p.status, image_url: p.image_url || '' });
+    setForm({ name: p.name, description: p.description || '', content: p.content || '', price: p.price || '', status: p.status, image_url: p.image_url || '' });
     setEditing(p.id);
   };
 
@@ -128,11 +130,12 @@ const AdminProducts = () => {
         )}
 
         <Dialog open={!!editing} onOpenChange={(open) => !open && setEditing(null)}>
-          <DialogContent>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader><DialogTitle>{editing === 'new' ? t('admin.newProduct') : t('admin.editProduct')}</DialogTitle></DialogHeader>
             <div className="space-y-4 pt-2">
               <div><Label>{t('common.name')}</Label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} className="mt-1.5" /></div>
-              <div><Label>{t('common.description')}</Label><Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} className="mt-1.5" /></div>
+              <div><Label>{t('common.description')}</Label><Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} className="mt-1.5" placeholder={t('admin.shortDescription')} /></div>
+              <div><Label>{t('admin.content')}</Label><Textarea rows={8} value={form.content} onChange={e => setForm(f => ({ ...f, content: e.target.value }))} className="mt-1.5" /></div>
               <div className="grid grid-cols-2 gap-4">
                 <div><Label>{t('admin.price')}</Label><Input value={form.price} onChange={e => setForm(f => ({ ...f, price: e.target.value }))} className="mt-1.5" /></div>
                 <div>
