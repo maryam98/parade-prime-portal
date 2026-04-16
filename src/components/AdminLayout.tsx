@@ -33,6 +33,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
     { path: '/admin/settings', label: t('admin.settings'), icon: SettingsIcon },
     { path: '/admin/pages', label: t('admin.pages'), icon: BookOpen },
     { path: '/admin/partners', label: t('admin.partners'), icon: Handshake },
+    { path: '/admin/team', label: t('admin.team'), icon: Users },
     { path: '/admin/blocked-ips', label: t('admin.blockedIps'), icon: Shield },
   ];
 

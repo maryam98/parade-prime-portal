@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Code, Smartphone, Palette, Lightbulb, Cloud, Headphones, ChevronLeft, ChevronRight, Package, ArrowRight, ArrowLeft, Handshake } from 'lucide-react';
+import { Code, Smartphone, Palette, Lightbulb, Cloud, Headphones, ChevronLeft, ChevronRight, Package, ArrowRight, ArrowLeft, Handshake, Users } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useState, useEffect, useCallback } from 'react';
@@ -74,6 +74,19 @@ const Home = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('partners')
+        .select('*')
+        .eq('status', 'Active')
+        .order('sort_order');
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const { data: teamMembers = [] } = useQuery({
+    queryKey: ['home-team'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('team_members')
         .select('*')
         .eq('status', 'Active')
         .order('sort_order');
@@ -346,6 +359,38 @@ const Home = () => {
                   </a>
                 ))}
               </motion.div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Team Members */}
+      {teamMembers.length > 0 && (
+        <section className="py-20 bg-background">
+          <div className="container mx-auto px-4">
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-14">
+              <motion.h2 variants={fadeUp} custom={0} className="text-3xl lg:text-4xl font-heading font-bold text-foreground">
+                {t('team.title')}
+              </motion.h2>
+            </motion.div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {teamMembers.map((member, i) => (
+                <motion.div key={member.id} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i}
+                  className="text-center group">
+                  <div className="w-32 h-32 mx-auto rounded-full overflow-hidden border-2 border-border group-hover:border-primary/50 transition-colors mb-4">
+                    {member.photo_url ? (
+                      <img src={member.photo_url} alt={member.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full bg-muted flex items-center justify-center">
+                        <Users className="h-10 w-10 text-muted-foreground/30" />
+                      </div>
+                    )}
+                  </div>
+                  <h3 className="text-lg font-heading font-semibold text-foreground">{member.name}</h3>
+                  <p className="text-sm text-primary font-medium mt-1">{member.position}</p>
+                  {member.bio && <p className="text-sm text-muted-foreground mt-2 line-clamp-2">{member.bio}</p>}
+                </motion.div>
+              ))}
             </div>
           </div>
         </section>

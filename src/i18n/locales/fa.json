@@ -362,7 +362,22 @@
     "partnerDeleted": "همکار حذف شد",
     "partnerSaveFailed": "خطا در ذخیره همکار",
     "websiteUrl": "آدرس وب‌سایت",
-    "logo": "لوگو"
+    "logo": "لوگو",
+    "team": "تیم ما",
+    "manageTeam": "مدیریت اعضای تیم",
+    "addMember": "افزودن عضو",
+    "noMembers": "هنوز عضوی ثبت نشده",
+    "firstMember": "اولین عضو تیم را اضافه کنید",
+    "newMember": "عضو جدید",
+    "editMember": "ویرایش عضو",
+    "deleteMember": "حذف عضو",
+    "memberSaved": "عضو ذخیره شد",
+    "memberDeleted": "عضو حذف شد",
+    "memberSaveFailed": "خطا در ذخیره عضو",
+    "position": "سمت",
+    "positionPlaceholder": "مثلاً مدیرعامل، تیم لید، ...",
+    "bio": "بیوگرافی",
+    "photo": "عکس"
   },
   "auth": {
     "login": "ورود",
@@ -375,5 +390,8 @@
   },
   "partners": {
     "title": "شرکت‌های همکار"
+  },
+  "team": {
+    "title": "تیم ما"
   }
 }
