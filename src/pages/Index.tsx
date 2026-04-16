@@ -338,27 +338,22 @@ const Home = () => {
               className="text-2xl lg:text-3xl font-heading font-bold text-foreground text-center mb-10">
               {t('partners.title')}
             </motion.h2>
-            <div className="relative">
-              <motion.div
-                className="flex gap-12 items-center"
-                animate={{ x: isRtl ? ['0%', '50%'] : ['0%', '-50%'] }}
-                transition={{ duration: partners.length * 4, repeat: Infinity, ease: 'linear' }}
-              >
-                {[...partners, ...partners].map((p, i) => (
-                  <a key={`${p.id}-${i}`} href={p.website_url || '#'} target={p.website_url ? '_blank' : undefined}
-                    rel="noopener noreferrer"
-                    className="flex-shrink-0 flex flex-col items-center gap-2 opacity-70 hover:opacity-100 transition-opacity">
-                    {p.logo_url ? (
-                      <img src={p.logo_url} alt={p.name} className="h-16 w-auto max-w-[140px] object-contain grayscale hover:grayscale-0 transition-all" />
-                    ) : (
-                      <div className="h-16 w-16 rounded-lg bg-card border border-border flex items-center justify-center">
-                        <Handshake className="h-7 w-7 text-muted-foreground" />
-                      </div>
-                    )}
-                    <span className="text-xs text-muted-foreground whitespace-nowrap">{p.name}</span>
-                  </a>
-                ))}
-              </motion.div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8">
+              {partners.map((p, i) => (
+                <motion.a key={p.id} href={p.website_url || '#'} target={p.website_url ? '_blank' : undefined}
+                  rel="noopener noreferrer"
+                  initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i}
+                  className="flex flex-col items-center gap-3 opacity-70 hover:opacity-100 transition-opacity">
+                  {p.logo_url ? (
+                    <img src={p.logo_url} alt={p.name} className="w-24 h-24 object-contain grayscale hover:grayscale-0 transition-all" />
+                  ) : (
+                    <div className="w-24 h-24 rounded-lg bg-card border border-border flex items-center justify-center">
+                      <Handshake className="h-10 w-10 text-muted-foreground" />
+                    </div>
+                  )}
+                  <span className="text-sm text-muted-foreground text-center">{p.name}</span>
+                </motion.a>
+              ))}
             </div>
           </div>
         </section>
