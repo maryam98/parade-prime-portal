@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Code, Smartphone, Palette, Lightbulb, Cloud, Headphones, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Code, Smartphone, Palette, Lightbulb, Cloud, Headphones, ChevronLeft, ChevronRight, Package, ArrowRight, ArrowLeft } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useState, useEffect, useCallback } from 'react';
@@ -36,6 +36,34 @@ const Home = () => {
         .select('*')
         .eq('status', 'Active')
         .order('sort_order');
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const { data: products = [] } = useQuery({
+    queryKey: ['home-products'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .eq('status', 'Active')
+        .order('sort_order')
+        .limit(4);
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const { data: articles = [] } = useQuery({
+    queryKey: ['home-articles'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('articles')
+        .select('*')
+        .eq('status', 'Published')
+        .order('published_at', { ascending: false })
+        .limit(3);
       if (error) throw error;
       return data;
     },
@@ -186,6 +214,95 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* Products Preview */}
+      {products.length > 0 && (
+        <section className="py-20 bg-muted/30">
+          <div className="container mx-auto px-4">
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-14">
+              <motion.h2 variants={fadeUp} custom={0} className="text-3xl lg:text-4xl font-heading font-bold text-foreground">
+                {t('products.title')}
+              </motion.h2>
+              <motion.p variants={fadeUp} custom={1} className="mt-3 text-muted-foreground max-w-xl mx-auto">
+                {t('products.subtitle')}
+              </motion.p>
+            </motion.div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {products.map((product, i) => (
+                <motion.div key={product.id} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i}>
+                  <Link to={`/products/${product.id}`}
+                    className="group block rounded-xl border border-border bg-card hover:border-primary/30 hover:shadow-lg transition-all duration-300 overflow-hidden">
+                    {product.image_url ? (
+                      <div className="w-full h-40 overflow-hidden">
+                        <img src={product.image_url} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                      </div>
+                    ) : (
+                      <div className="w-full h-40 bg-muted flex items-center justify-center">
+                        <Package className="h-10 w-10 text-muted-foreground/30" />
+                      </div>
+                    )}
+                    <div className="p-5">
+                      <h3 className="text-base font-heading font-semibold text-card-foreground line-clamp-1">{product.name}</h3>
+                      {product.description && <p className="mt-1.5 text-sm text-muted-foreground line-clamp-2">{product.description}</p>}
+                      {product.price && <p className="mt-3 text-lg font-heading font-bold text-primary">{product.price}</p>}
+                    </div>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+            <div className="text-center mt-10">
+              <Link to="/products" className="inline-flex items-center gap-1.5 text-primary font-medium hover:underline">
+                {t('products.learnMore')} {isRtl ? <ArrowLeft className="h-4 w-4" /> : <ArrowRight className="h-4 w-4" />}
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Latest Articles */}
+      {articles.length > 0 && (
+        <section className="py-20 bg-background">
+          <div className="container mx-auto px-4">
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-14">
+              <motion.h2 variants={fadeUp} custom={0} className="text-3xl lg:text-4xl font-heading font-bold text-foreground">
+                {t('blog.title')}
+              </motion.h2>
+              <motion.p variants={fadeUp} custom={1} className="mt-3 text-muted-foreground max-w-xl mx-auto">
+                {t('blog.subtitle')}
+              </motion.p>
+            </motion.div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {articles.map((article, i) => (
+                <motion.div key={article.id} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i}>
+                  <Link to={`/blog/${article.id}`}
+                    className="group block rounded-xl border border-border bg-card hover:border-primary/30 hover:shadow-lg transition-all duration-300 overflow-hidden">
+                    {article.image_url && (
+                      <div className="w-full h-48 overflow-hidden">
+                        <img src={article.image_url} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                      </div>
+                    )}
+                    <div className="p-6">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-primary/10 text-primary">{article.category}</span>
+                        {article.published_at && (
+                          <span className="text-xs text-muted-foreground">{new Date(article.published_at).toLocaleDateString(i18n.language === 'fa' ? 'fa-IR' : i18n.language === 'de' ? 'de-DE' : 'en-US')}</span>
+                        )}
+                      </div>
+                      <h3 className="text-lg font-heading font-semibold text-card-foreground line-clamp-2">{article.title}</h3>
+                      {article.excerpt && <p className="mt-2 text-sm text-muted-foreground line-clamp-2">{article.excerpt}</p>}
+                    </div>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+            <div className="text-center mt-10">
+              <Link to="/blog" className="inline-flex items-center gap-1.5 text-primary font-medium hover:underline">
+                {t('blog.title')} {isRtl ? <ArrowLeft className="h-4 w-4" /> : <ArrowRight className="h-4 w-4" />}
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* CTA */}
       <section className="py-20 bg-background">
