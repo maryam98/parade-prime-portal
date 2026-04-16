@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Code, Smartphone, Palette, Lightbulb, Cloud, Headphones, ChevronLeft, ChevronRight, Package, ArrowRight, ArrowLeft, Handshake } from 'lucide-react';
+import { Code, Smartphone, Palette, Lightbulb, Cloud, Headphones, ChevronLeft, ChevronRight, Package, ArrowRight, ArrowLeft, Handshake, Users } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useState, useEffect, useCallback } from 'react';
@@ -74,6 +74,19 @@ const Home = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('partners')
+        .select('*')
+        .eq('status', 'Active')
+        .order('sort_order');
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const { data: teamMembers = [] } = useQuery({
+    queryKey: ['home-team'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('team_members')
         .select('*')
         .eq('status', 'Active')
         .order('sort_order');
