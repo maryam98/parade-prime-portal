@@ -364,6 +364,38 @@ const Home = () => {
         </section>
       )}
 
+      {/* Team Members */}
+      {teamMembers.length > 0 && (
+        <section className="py-20 bg-background">
+          <div className="container mx-auto px-4">
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-14">
+              <motion.h2 variants={fadeUp} custom={0} className="text-3xl lg:text-4xl font-heading font-bold text-foreground">
+                {t('team.title')}
+              </motion.h2>
+            </motion.div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {teamMembers.map((member, i) => (
+                <motion.div key={member.id} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i}
+                  className="text-center group">
+                  <div className="w-32 h-32 mx-auto rounded-full overflow-hidden border-2 border-border group-hover:border-primary/50 transition-colors mb-4">
+                    {member.photo_url ? (
+                      <img src={member.photo_url} alt={member.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full bg-muted flex items-center justify-center">
+                        <Users className="h-10 w-10 text-muted-foreground/30" />
+                      </div>
+                    )}
+                  </div>
+                  <h3 className="text-lg font-heading font-semibold text-foreground">{member.name}</h3>
+                  <p className="text-sm text-primary font-medium mt-1">{member.position}</p>
+                  {member.bio && <p className="text-sm text-muted-foreground mt-2 line-clamp-2">{member.bio}</p>}
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* CTA */}
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4 text-center">
