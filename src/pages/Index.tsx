@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Code, Smartphone, Palette, Lightbulb, Cloud, Headphones, ChevronLeft, ChevronRight, Package, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Code, Smartphone, Palette, Lightbulb, Cloud, Headphones, ChevronLeft, ChevronRight, Package, ArrowRight, ArrowLeft, Handshake } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useState, useEffect, useCallback } from 'react';
@@ -64,6 +64,19 @@ const Home = () => {
         .eq('status', 'Published')
         .order('published_at', { ascending: false })
         .limit(3);
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const { data: partners = [] } = useQuery({
+    queryKey: ['home-partners'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('partners')
+        .select('*')
+        .eq('status', 'Active')
+        .order('sort_order');
       if (error) throw error;
       return data;
     },
@@ -299,6 +312,40 @@ const Home = () => {
               <Link to="/blog" className="inline-flex items-center gap-1.5 text-primary font-medium hover:underline">
                 {t('blog.title')} {isRtl ? <ArrowLeft className="h-4 w-4" /> : <ArrowRight className="h-4 w-4" />}
               </Link>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Partners Slider */}
+      {partners.length > 0 && (
+        <section className="py-16 bg-muted/30 overflow-hidden">
+          <div className="container mx-auto px-4">
+            <motion.h2 initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
+              className="text-2xl lg:text-3xl font-heading font-bold text-foreground text-center mb-10">
+              {t('partners.title')}
+            </motion.h2>
+            <div className="relative">
+              <motion.div
+                className="flex gap-12 items-center"
+                animate={{ x: isRtl ? ['0%', '50%'] : ['0%', '-50%'] }}
+                transition={{ duration: partners.length * 4, repeat: Infinity, ease: 'linear' }}
+              >
+                {[...partners, ...partners].map((p, i) => (
+                  <a key={`${p.id}-${i}`} href={p.website_url || '#'} target={p.website_url ? '_blank' : undefined}
+                    rel="noopener noreferrer"
+                    className="flex-shrink-0 flex flex-col items-center gap-2 opacity-70 hover:opacity-100 transition-opacity">
+                    {p.logo_url ? (
+                      <img src={p.logo_url} alt={p.name} className="h-16 w-auto max-w-[140px] object-contain grayscale hover:grayscale-0 transition-all" />
+                    ) : (
+                      <div className="h-16 w-16 rounded-lg bg-card border border-border flex items-center justify-center">
+                        <Handshake className="h-7 w-7 text-muted-foreground" />
+                      </div>
+                    )}
+                    <span className="text-xs text-muted-foreground whitespace-nowrap">{p.name}</span>
+                  </a>
+                ))}
+              </motion.div>
             </div>
           </div>
         </section>

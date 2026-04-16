@@ -349,7 +349,20 @@
     "deleteScheduleDesc": "Are you sure? This action cannot be undone.",
     "deleteHolidayTitle": "Delete Holiday",
     "deleteHolidayDesc": "Are you sure?",
-    "description": "Description"
+    "description": "Description",
+    "partners": "Partners",
+    "managePartners": "Manage partner companies",
+    "addPartner": "Add Partner",
+    "noPartners": "No partners registered yet",
+    "firstPartner": "Add your first partner",
+    "newPartner": "New Partner",
+    "editPartner": "Edit Partner",
+    "deletePartner": "Delete Partner",
+    "partnerSaved": "Partner saved",
+    "partnerDeleted": "Partner deleted",
+    "partnerSaveFailed": "Failed to save partner",
+    "websiteUrl": "Website URL",
+    "logo": "Logo"
   },
   "auth": {
     "login": "Login",
@@ -359,5 +372,8 @@
     "forgotPassword": "Forgot Password?",
     "noAccount": "Don't have an account?",
     "register": "Register"
+  },
+  "partners": {
+    "title": "Our Partners"
   }
 }

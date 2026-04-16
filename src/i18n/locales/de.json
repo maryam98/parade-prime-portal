@@ -349,7 +349,20 @@
     "deleteScheduleDesc": "Sind Sie sicher? Diese Aktion kann nicht rückgängig gemacht werden.",
     "deleteHolidayTitle": "Feiertag löschen",
     "deleteHolidayDesc": "Sind Sie sicher?",
-    "description": "Beschreibung"
+    "description": "Beschreibung",
+    "partners": "Partner",
+    "managePartners": "Partnerunternehmen verwalten",
+    "addPartner": "Partner hinzufügen",
+    "noPartners": "Noch keine Partner registriert",
+    "firstPartner": "Fügen Sie Ihren ersten Partner hinzu",
+    "newPartner": "Neuer Partner",
+    "editPartner": "Partner bearbeiten",
+    "deletePartner": "Partner löschen",
+    "partnerSaved": "Partner gespeichert",
+    "partnerDeleted": "Partner gelöscht",
+    "partnerSaveFailed": "Fehler beim Speichern des Partners",
+    "websiteUrl": "Website-URL",
+    "logo": "Logo"
   },
   "auth": {
     "login": "Anmelden",
@@ -359,5 +372,8 @@
     "forgotPassword": "Passwort vergessen?",
     "noAccount": "Noch kein Konto?",
     "register": "Registrieren"
+  },
+  "partners": {
+    "title": "Unsere Partner"
   }
 }
