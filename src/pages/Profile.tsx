@@ -16,6 +16,23 @@ const Profile = () => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.language === 'fa';
   const { user, profile } = useAuth();
+  const queryClient = useQueryClient();
+  const [cancellingId, setCancellingId] = useState<string | null>(null);
+
+  const handleCancelAppointment = async (id: string) => {
+    setCancellingId(id);
+    const { error } = await supabase
+      .from('appointments')
+      .update({ status: 'Cancelled' })
+      .eq('id', id);
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success(isRtl ? 'نوبت لغو شد' : i18n.language === 'de' ? 'Termin storniert' : 'Appointment cancelled');
+      queryClient.invalidateQueries({ queryKey: ['my-appointments'] });
+    }
+    setCancellingId(null);
+  };
 
   const [displayName, setDisplayName] = useState('');
   const [phone, setPhone] = useState('');
