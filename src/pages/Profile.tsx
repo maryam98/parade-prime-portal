@@ -3,10 +3,14 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import { User, Mail, Phone, Save, Lock, Camera, CalendarDays, Clock, Loader2 } from 'lucide-react';
+import { User, Mail, Phone, Save, Lock, Camera, CalendarDays, Clock, Loader2, X } from 'lucide-react';
 import { toast } from '@/components/ui/sonner';
 import ImageUpload from '@/components/ImageUpload';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 const Profile = () => {
   const { t, i18n } = useTranslation();
