@@ -205,6 +205,15 @@ const Header = () => {
                   {item.label}
                 </Link>
               ))}
+              {user && (
+                <Link
+                  to="/profile"
+                  onClick={() => setMobileOpen(false)}
+                  className="px-3 py-2 rounded-md text-sm font-medium text-accent-foreground/70"
+                >
+                  {i18n.language === 'fa' ? 'پروفایل' : i18n.language === 'de' ? 'Profil' : 'Profile'}
+                </Link>
+              )}
               {user && isAdmin && (
                 <Link
                   to="/admin"
