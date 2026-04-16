@@ -349,7 +349,20 @@
     "deleteScheduleDesc": "آیا مطمئنید؟ این عمل غیرقابل بازگشت است.",
     "deleteHolidayTitle": "حذف تعطیلی",
     "deleteHolidayDesc": "آیا مطمئنید؟",
-    "description": "توضیحات"
+    "description": "توضیحات",
+    "partners": "شرکای تجاری",
+    "managePartners": "مدیریت شرکت‌های همکار",
+    "addPartner": "افزودن همکار",
+    "noPartners": "هنوز همکاری ثبت نشده",
+    "firstPartner": "اولین همکار خود را اضافه کنید",
+    "newPartner": "همکار جدید",
+    "editPartner": "ویرایش همکار",
+    "deletePartner": "حذف همکار",
+    "partnerSaved": "همکار ذخیره شد",
+    "partnerDeleted": "همکار حذف شد",
+    "partnerSaveFailed": "خطا در ذخیره همکار",
+    "websiteUrl": "آدرس وب‌سایت",
+    "logo": "لوگو"
   },
   "auth": {
     "login": "ورود",
