@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { ExternalLink, Search } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Search } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useState, useMemo } from 'react';
@@ -85,24 +85,9 @@ const Products = () => {
                     <p className="mt-3 text-muted-foreground">{product.description}</p>
                     <div className="mt-5 flex items-center justify-between">
                       <span className="text-2xl font-heading font-bold text-primary">{product.price}</span>
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <button className="flex items-center gap-1.5 text-sm text-primary font-medium hover:underline">
-                            {t('products.learnMore')} <ExternalLink className="h-4 w-4" />
-                          </button>
-                        </DialogTrigger>
-                        <DialogContent className="max-w-lg">
-                          <DialogHeader>
-                            <DialogTitle>{product.name}</DialogTitle>
-                          </DialogHeader>
-                          {product.image_url && (
-                            <img src={product.image_url} alt={product.name} className="w-full h-56 object-cover rounded-lg" />
-                          )}
-                          <p className="text-muted-foreground">{product.description}</p>
-                          {product.content && <div className="mt-3 text-sm text-muted-foreground whitespace-pre-wrap">{product.content}</div>}
-                          {product.price && <p className="text-2xl font-heading font-bold text-primary mt-3">{product.price}</p>}
-                        </DialogContent>
-                      </Dialog>
+                      <Link to={`/products/${product.id}`} className="flex items-center gap-1.5 text-sm text-primary font-medium hover:underline">
+                        {t('products.learnMore')}
+                      </Link>
                     </div>
                   </div>
                 </motion.div>

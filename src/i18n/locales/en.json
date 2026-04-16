@@ -89,7 +89,9 @@
     "title": "Our Products",
     "subtitle": "Software solutions ready to deploy",
     "learnMore": "Learn More",
-    "price": "Price"
+    "price": "Price",
+    "notFound": "Product not found",
+    "backToProducts": "Back to products"
   },
   "footer": {
     "description": "Innovative software solutions for your business growth.",
