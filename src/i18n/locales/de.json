@@ -89,7 +89,9 @@
     "title": "Unsere Produkte",
     "subtitle": "Einsatzbereite Softwarelösungen",
     "learnMore": "Mehr erfahren",
-    "price": "Preis"
+    "price": "Preis",
+    "notFound": "Produkt nicht gefunden",
+    "backToProducts": "Zurück zu den Produkten"
   },
   "footer": {
     "description": "Innovative Softwarelösungen für Ihr Unternehmenswachstum.",
