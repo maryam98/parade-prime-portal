@@ -3,15 +3,36 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import { User, Mail, Phone, Save, Lock, Camera, CalendarDays, Clock, Loader2 } from 'lucide-react';
+import { User, Mail, Phone, Save, Lock, Camera, CalendarDays, Clock, Loader2, X } from 'lucide-react';
 import { toast } from '@/components/ui/sonner';
 import ImageUpload from '@/components/ImageUpload';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 const Profile = () => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.language === 'fa';
   const { user, profile } = useAuth();
+  const queryClient = useQueryClient();
+  const [cancellingId, setCancellingId] = useState<string | null>(null);
+
+  const handleCancelAppointment = async (id: string) => {
+    setCancellingId(id);
+    const { error } = await supabase
+      .from('appointments')
+      .update({ status: 'Cancelled' })
+      .eq('id', id);
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success(isRtl ? 'نوبت لغو شد' : i18n.language === 'de' ? 'Termin storniert' : 'Appointment cancelled');
+      queryClient.invalidateQueries({ queryKey: ['my-appointments'] });
+    }
+    setCancellingId(null);
+  };
 
   const [displayName, setDisplayName] = useState('');
   const [phone, setPhone] = useState('');
@@ -192,8 +213,9 @@ const Profile = () => {
               <div className="space-y-3">
                 {myAppointments.map((appt) => {
                   const statusCls = appt.status === 'Confirmed' ? 'bg-green-500/10 text-green-600' : appt.status === 'Pending' ? 'bg-yellow-500/10 text-yellow-600' : 'bg-destructive/10 text-destructive';
+                  const canCancel = appt.status !== 'Cancelled' && appt.status !== 'Completed';
                   return (
-                    <div key={appt.id} className="flex items-center justify-between p-3 rounded-lg bg-muted/30 border border-border/50">
+                    <div key={appt.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 p-3 rounded-lg bg-muted/30 border border-border/50">
                       <div className="flex items-center gap-3">
                         <div className="flex flex-col">
                           <span className="text-sm font-medium text-card-foreground">{appt.appointment_date}</span>
@@ -202,7 +224,42 @@ const Profile = () => {
                           </span>
                         </div>
                       </div>
-                      <span className={`text-xs px-2 py-1 rounded-full ${statusCls}`}>{appt.status}</span>
+                      <div className="flex items-center gap-2 self-end sm:self-auto">
+                        <span className={`text-xs px-2 py-1 rounded-full ${statusCls}`}>{appt.status}</span>
+                        {canCancel && (
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <button
+                                disabled={cancellingId === appt.id}
+                                className="text-xs px-2 py-1 rounded-full bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors flex items-center gap-1 disabled:opacity-50"
+                              >
+                                {cancellingId === appt.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <X className="h-3 w-3" />}
+                                {isRtl ? 'لغو' : i18n.language === 'de' ? 'Stornieren' : 'Cancel'}
+                              </button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent dir={isRtl ? 'rtl' : 'ltr'}>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                  {isRtl ? 'لغو نوبت؟' : i18n.language === 'de' ? 'Termin stornieren?' : 'Cancel appointment?'}
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  {isRtl
+                                    ? 'آیا مطمئن هستید که می‌خواهید این نوبت را لغو کنید؟ این عمل قابل بازگشت نیست.'
+                                    : i18n.language === 'de'
+                                    ? 'Sind Sie sicher, dass Sie diesen Termin stornieren möchten? Dies kann nicht rückgängig gemacht werden.'
+                                    : 'Are you sure you want to cancel this appointment? This cannot be undone.'}
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>{isRtl ? 'انصراف' : i18n.language === 'de' ? 'Zurück' : 'Back'}</AlertDialogCancel>
+                                <AlertDialogAction onClick={() => handleCancelAppointment(appt.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                                  {isRtl ? 'بله، لغو کن' : i18n.language === 'de' ? 'Ja, stornieren' : 'Yes, cancel'}
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        )}
+                      </div>
                     </div>
                   );
                 })}
