@@ -362,7 +362,22 @@
     "partnerDeleted": "Partner gelöscht",
     "partnerSaveFailed": "Fehler beim Speichern des Partners",
     "websiteUrl": "Website-URL",
-    "logo": "Logo"
+    "logo": "Logo",
+    "team": "Team",
+    "manageTeam": "Teammitglieder verwalten",
+    "addMember": "Mitglied hinzufügen",
+    "noMembers": "Noch keine Teammitglieder",
+    "firstMember": "Fügen Sie Ihr erstes Teammitglied hinzu",
+    "newMember": "Neues Mitglied",
+    "editMember": "Mitglied bearbeiten",
+    "deleteMember": "Mitglied löschen",
+    "memberSaved": "Mitglied gespeichert",
+    "memberDeleted": "Mitglied gelöscht",
+    "memberSaveFailed": "Fehler beim Speichern des Mitglieds",
+    "position": "Position",
+    "positionPlaceholder": "z.B. CEO, Team Lead, ...",
+    "bio": "Biografie",
+    "photo": "Foto"
   },
   "auth": {
     "login": "Anmelden",
@@ -375,5 +390,8 @@
   },
   "partners": {
     "title": "Unsere Partner"
+  },
+  "team": {
+    "title": "Unser Team"
   }
 }

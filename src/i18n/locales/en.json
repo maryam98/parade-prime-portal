@@ -362,7 +362,22 @@
     "partnerDeleted": "Partner deleted",
     "partnerSaveFailed": "Failed to save partner",
     "websiteUrl": "Website URL",
-    "logo": "Logo"
+    "logo": "Logo",
+    "team": "Team",
+    "manageTeam": "Manage team members",
+    "addMember": "Add Member",
+    "noMembers": "No team members yet",
+    "firstMember": "Add your first team member",
+    "newMember": "New Member",
+    "editMember": "Edit Member",
+    "deleteMember": "Delete Member",
+    "memberSaved": "Member saved",
+    "memberDeleted": "Member deleted",
+    "memberSaveFailed": "Failed to save member",
+    "position": "Position",
+    "positionPlaceholder": "e.g. CEO, Team Lead, ...",
+    "bio": "Biography",
+    "photo": "Photo"
   },
   "auth": {
     "login": "Login",
@@ -375,5 +390,8 @@
   },
   "partners": {
     "title": "Our Partners"
+  },
+  "team": {
+    "title": "Our Team"
   }
 }
