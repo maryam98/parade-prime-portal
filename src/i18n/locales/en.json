@@ -372,5 +372,8 @@
     "forgotPassword": "Forgot Password?",
     "noAccount": "Don't have an account?",
     "register": "Register"
+  },
+  "partners": {
+    "title": "Our Partners"
   }
 }
