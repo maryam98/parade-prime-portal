@@ -33,14 +33,18 @@ const Profile = () => {
   }, [profile]);
 
   const { data: myAppointments = [], isLoading: loadingAppts } = useQuery({
-    queryKey: ['my-appointments', user?.id],
+    queryKey: ['my-appointments', user?.id, user?.email],
     queryFn: async () => {
       if (!user?.id) return [];
+      // Match appointments by user_id OR by email (covers bookings made before login or via guest form)
+      const filters: string[] = [`user_id.eq.${user.id}`];
+      if (user.email) filters.push(`email.eq.${user.email}`);
       const { data, error } = await supabase
         .from('appointments')
         .select('*')
-        .eq('user_id', user.id)
-        .order('appointment_date', { ascending: false });
+        .or(filters.join(','))
+        .order('appointment_date', { ascending: false })
+        .order('appointment_time', { ascending: false });
       if (error) throw error;
       return data;
     },
